@@ -131,20 +131,24 @@ export default function Terminal() {
                     output.type
                   )}`}
                 >
-                  <motion.span
-                    className="text-gray-500 text-xs mr-2 inline-block"
-                    animate={{
-                      opacity: [0.5, 1, 0.5],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: 'easeInOut',
-                    }}
-                  >
-                    {output.timestamp.toLocaleTimeString()}
-                  </motion.span>
-                  {output.message}
+                  {output.type !== 'output' && (
+                    <motion.span
+                      className="text-gray-500 text-xs mr-2 inline-block"
+                      animate={{
+                        opacity: [0.5, 1, 0.5],
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: 'easeInOut',
+                      }}
+                    >
+                      {output.timestamp.toLocaleTimeString()}
+                    </motion.span>
+                  )}
+                  <span className={output.type === 'output' ? 'block' : ''}>
+                    {output.message}
+                  </span>
                 </motion.div>
               ))}
             </div>

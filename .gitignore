@@ -10,7 +10,8 @@
 
 # next.js
 /.next/
-/out/
+# /out/ - Comentado para permitir el deploy en GitHub Pages
+# Los archivos en /out/ se generan en el workflow de GitHub Actions
 
 # production
 /build

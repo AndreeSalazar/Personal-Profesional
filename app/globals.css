@@ -360,6 +360,26 @@ body {
   font-family: var(--font-mono);
   font-size: 14px;
   line-height: 1.6;
+  caret-color: #FF6B35 !important;
+}
+
+.code-editor::selection {
+  background-color: rgba(255, 107, 53, 0.3);
+  color: #FFFFFF;
+}
+
+.code-editor:focus {
+  outline: none;
+  caret-color: #FF6B35 !important;
+}
+
+/* Ensure textarea cursor is visible */
+textarea.code-editor {
+  caret-color: #FF6B35 !important;
+}
+
+textarea.code-editor:focus {
+  caret-color: #FF6B35 !important;
 }
 
 /* Terminal */
