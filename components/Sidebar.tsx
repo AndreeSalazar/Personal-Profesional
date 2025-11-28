@@ -6,18 +6,21 @@ import { useStore } from '@/store/useStore'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import SearchBar from './SearchBar'
+import { useLanguage } from '@/contexts/LanguageContext'
 
-const nodeTypes = [
-  { name: 'Assembler', type: 'assembler' as const, count: 1 },
-  { name: 'Compiler C', type: 'compiler' as const, count: 1 },
-  { name: 'Compiler C++', type: 'compiler' as const, count: 1 },
-  { name: 'Compiler Rust', type: 'compiler' as const, count: 1 },
-  { name: 'Parámetro', type: 'parameter' as const, count: 0 },
+const getNodeTypes = (t: (key: string) => string) => [
+  { name: t('sidebar.assembler'), type: 'assembler' as const, count: 1 },
+  { name: t('sidebar.compilerC'), type: 'compiler' as const, count: 1 },
+  { name: t('sidebar.compilerCpp'), type: 'compiler' as const, count: 1 },
+  { name: t('sidebar.compilerRust'), type: 'compiler' as const, count: 1 },
+  { name: t('sidebar.parameter'), type: 'parameter' as const, count: 0 },
 ]
 
 export default function Sidebar() {
   const { addNode, nodes } = useStore()
   const pathname = usePathname()
+  const { t } = useLanguage()
+  const nodeTypes = getNodeTypes(t)
 
   const handleAddNode = (type: string, name: string) => {
     const newNode = {
@@ -103,13 +106,13 @@ export default function Sidebar() {
       <div className="p-4 border-b border-white/5 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-white/2 to-transparent opacity-30" />
         <h2 className="text-xs uppercase tracking-widest text-gray-500 mb-3 font-bold relative z-10" style={{ letterSpacing: '0.15em' }}>
-          NAVEGACIÓN
+          {t('sidebar.navigation')}
         </h2>
         <div className="space-y-2 relative z-10">
           {[
-            { href: '/', icon: FileCode, label: 'Editor' },
-            { href: '/profile', icon: User, label: 'Mi Perfil' },
-            { href: '/projects', icon: FolderOpen, label: 'Mis Proyectos' },
+            { href: '/', icon: FileCode, label: t('nav.editor') },
+            { href: '/profile', icon: User, label: t('nav.profile') },
+            { href: '/projects', icon: FolderOpen, label: t('nav.projects') },
           ].map((item) => {
             const isActive = pathname === item.href
             return (

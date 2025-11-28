@@ -4,9 +4,11 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Play, Save, X, Undo, Redo, Zap, CheckCircle } from 'lucide-react'
 import { useStore } from '@/store/useStore'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function CodeEditor() {
   const { selectedNodeId, nodes, updateNode, addTerminalOutput } = useStore()
+  const { t } = useLanguage()
   const [code, setCode] = useState('')
   const [isSaved, setIsSaved] = useState(true)
 
@@ -78,7 +80,7 @@ export default function CodeEditor() {
         addTerminalOutput({
           id: Date.now().toString(),
           type: 'success',
-          message: `✅ Código guardado exitosamente en: ${selectedNode?.label || 'nodo'}`,
+          message: `${t('terminal.saved')} ${selectedNode?.label || t('common.node')}`,
           timestamp: new Date(),
         })
         
@@ -102,7 +104,7 @@ export default function CodeEditor() {
     if (selectedNodeId) {
       setIsExecuting(true)
       setExecutionProgress(0)
-      setExecutionStage('Iniciando compilación...')
+      setExecutionStage(t('execution.starting'))
       
       // Trigger execution animation event
       if (typeof window !== 'undefined') {
@@ -114,7 +116,7 @@ export default function CodeEditor() {
       addTerminalOutput({
         id: Date.now().toString(),
         type: 'info',
-        message: '>>> Iniciando compilación...',
+        message: `>>> ${t('terminal.compiling')}`,
         timestamp: new Date(),
       })
       
@@ -130,13 +132,13 @@ export default function CodeEditor() {
       }, 50)
       
       setTimeout(() => {
-        setExecutionStage('Linker: Procesando...')
+        setExecutionStage(t('execution.linker'))
         setExecutionProgress(33)
         
         addTerminalOutput({
           id: (Date.now() + 1).toString(),
           type: 'success',
-          message: '>>> Linker: Éxito.',
+          message: `>>> ${t('terminal.linker')}`,
           timestamp: new Date(),
         })
         
@@ -152,13 +154,13 @@ export default function CodeEditor() {
         }, 50)
         
         setTimeout(() => {
-          setExecutionStage('Ejecutando código...')
+          setExecutionStage(t('execution.running'))
           setExecutionProgress(66)
           
           addTerminalOutput({
             id: (Date.now() + 2).toString(),
             type: 'info',
-            message: '>>> Ejecutando...',
+            message: `>>> ${t('terminal.executing')}`,
             timestamp: new Date(),
           })
           
@@ -301,12 +303,12 @@ export default function CodeEditor() {
             }
             
                 setExecutionProgress(100)
-                setExecutionStage('Completado ✓')
+                setExecutionStage(t('execution.completed'))
                 
                 addTerminalOutput({
                   id: (Date.now() + 3).toString(),
                   type: 'output',
-                  message: `${output}\n\nExit code: 0`,
+                  message: `${output}\n\n${t('terminal.exitCode')}`,
                   timestamp: new Date(),
                 })
                 
@@ -405,7 +407,7 @@ export default function CodeEditor() {
                   ⬇️
                 </motion.span>
                 <span className="text-gray-400">
-                  Hereda de: <span className="text-primary font-medium">{parentNode.label}</span>
+                  {t('editor.inheritedFrom')} <span className="text-primary font-medium">{parentNode.label}</span>
                 </span>
               </motion.div>
             ) : null
@@ -508,10 +510,10 @@ export default function CodeEditor() {
             </motion.div>
             <span className="relative z-10">
               {isProcessing 
-                ? `Procesando... ${processingProgress}%` 
+                ? `${t('editor.processing')} ${processingProgress}%` 
                 : isSaved 
-                  ? 'Guardado ✓' 
-                  : 'Guardar'}
+                  ? t('editor.saved')
+                  : t('editor.save')}
             </span>
             
             {/* Progress bar */}
@@ -600,7 +602,7 @@ export default function CodeEditor() {
             <span className="relative z-10">
               {isExecuting 
                 ? `${executionStage} ${executionProgress}%` 
-                : 'Ejecutar'}
+                : t('editor.execute')}
             </span>
             
             {/* Progress bar */}
@@ -637,7 +639,7 @@ export default function CodeEditor() {
                 exit={{ opacity: 0 }}
                 className="text-xs text-gray-500"
               >
-                Guardado
+                {t('editor.saved')}
               </motion.span>
             )}
           </AnimatePresence>
@@ -697,8 +699,8 @@ export default function CodeEditor() {
           </div>
           </div>
 
-          <div className="p-4 border-t border-white/5 text-xs text-gray-500">
-            <p>Tip: Ctrl+P extrae selección a parámetro</p>
+            <div className="p-4 border-t border-white/5 text-xs text-gray-500">
+            <p>{t('editor.tip')}</p>
           </div>
         </div>
       </div>

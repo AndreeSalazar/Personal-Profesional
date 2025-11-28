@@ -13,18 +13,27 @@
   box-sizing: border-box;
 }
 
-html,
-body {
+html {
   height: 100%;
   overflow: hidden;
   background: #000000;
   color: #FFFFFF;
   font-family: var(--font-inter);
+  -webkit-overflow-scrolling: touch;
+}
+
+body {
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: #000000;
+  color: #FFFFFF;
+  font-family: var(--font-inter);
+  -webkit-overflow-scrolling: touch;
 }
 
 #__next {
-  height: 100%;
-  overflow: hidden;
+  min-height: 100%;
   position: relative;
   z-index: 1;
 }

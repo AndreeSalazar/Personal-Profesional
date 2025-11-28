@@ -4,16 +4,19 @@ import { useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Pin } from 'lucide-react'
 import { useStore } from '@/store/useStore'
+import { useLanguage } from '@/contexts/LanguageContext'
 
-const terminals = [
-  { id: 'nasm', label: 'Terminal NASM' },
-  { id: 'c', label: 'Terminal C' },
-  { id: 'cpp', label: 'Terminal C++' },
-  { id: 'rust', label: 'Terminal Rust' },
+const getTerminals = (t: (key: string) => string) => [
+  { id: 'nasm', label: t('terminal.nasm') },
+  { id: 'c', label: t('terminal.c') },
+  { id: 'cpp', label: t('terminal.cpp') },
+  { id: 'rust', label: t('terminal.rust') },
 ]
 
 export default function Terminal() {
   const { terminalOutputs, activeTerminal, setActiveTerminal } = useStore()
+  const { t } = useLanguage()
+  const terminals = getTerminals(t)
   const scrollRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -104,7 +107,7 @@ export default function Terminal() {
               animate={{ opacity: 1 }}
               className="text-gray-500"
             >
-              Terminal listo. Ejecuta código para ver la salida.
+                  {t('terminal.ready')}
             </motion.div>
           ) : (
             <div className="relative">

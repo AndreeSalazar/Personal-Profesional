@@ -5,12 +5,13 @@ import { Github, ExternalLink, Star, Code2, Rocket, Award, ArrowLeft, Filter, Se
 import { useState } from 'react'
 import ContactBar from '@/components/ContactBar'
 import Breadcrumbs from '@/components/Breadcrumbs'
+import { useLanguage } from '@/contexts/LanguageContext'
 
-const achievements = [
+const getAchievements = (t: (key: string) => string) => [
   {
     id: 1,
-    title: 'Vulkan Render Engine',
-    description: 'Motor de renderizado minimalista 3D construido con C++ y Vulkan API. Implementación completa del pipeline gráfico con renderizado en tiempo real. Proyecto desarrollado en el último año que demuestra dominio práctico de programación de sistemas de bajo nivel y APIs gráficas avanzadas.',
+    titleKey: 'projects.vulkan.title',
+    descriptionKey: 'projects.vulkan.description',
     tech: ['C++', 'Vulkan API', 'GLSL', 'CMake'],
     link: 'https://github.com/AndreeSalazar/Motor-de-Render-Minimalista',
     icon: Rocket,
@@ -19,8 +20,8 @@ const achievements = [
   },
   {
     id: 2,
-    title: 'Omega Visual Editor - Web',
-    description: 'Aplicación web completa desarrollada en Angular que implementa un editor de código visual basado en nodos. Sistema diseñado para facilitar visualmente el desarrollo de código, permitiendo construir compiladores, kernels y software optimizado a través de nodos visuales. Desde Assembly hasta ejecución, en tiempo real. Desplegado y funcional.',
+    titleKey: 'projects.omegaWeb.title',
+    descriptionKey: 'projects.omegaWeb.description',
     tech: ['Angular', 'TypeScript', 'RxJS', 'CSS3'],
     link: 'https://andreesalazar.github.io/Omega-Visual-Web/',
     icon: Code2,
@@ -30,55 +31,55 @@ const achievements = [
   },
   {
     id: 3,
-    title: 'Codermind-Visual',
-    description: 'El inicio de todo. Versión muy experimental construida con Python y PyQt. Fue el punto de partida para probar el concepto y lograr que funcionara. Aunque inestable, esta base experimental sirvió como inspiración fundamental para el desarrollo de Omega-Visual y Ultra-Omega, demostrando el proceso iterativo de mejora continua y la evolución desde una idea hasta proyectos funcionales.',
+    titleKey: 'projects.codermind.title',
+    descriptionKey: 'projects.codermind.description',
     tech: ['Python', 'PyQt', 'Node System'],
     link: 'https://github.com/AndreeSalazar/Omega-Visual-Semantic-Node-Based-Code-Editor',
     icon: Code2,
     color: 'from-orange-500 to-red-500',
     isBase: true,
-    highlights: [
-      'Muy experimental',
-      'El inicio de todo',
-      'Inspiración fundamental',
+    highlightKeys: [
+      'projects.codermind.highlight1',
+      'projects.codermind.highlight2',
+      'projects.codermind.highlight3',
     ],
   },
   {
     id: 4,
-    title: 'Ultra-Omega',
-    description: 'Versión avanzada del editor visual construida con Rust + EGUI + wgpu. Diseñada para ser rápida, segura, moderna y multiplataforma. Ideal para manejar 100–1000 nodos con alto rendimiento. Evolución final que mejora significativamente la estabilidad y rendimiento de la versión base.',
-    tech: ['Rust', 'EGUI', 'wgpu', 'Multiplataforma'],
+    titleKey: 'projects.ultraOmega.title',
+    descriptionKey: 'projects.ultraOmega.description',
+    tech: ['Rust', 'EGUI', 'wgpu', t('projects.tech.multiplataforma')],
     link: 'https://github.com/AndreeSalazar/Omega-Visual-Semantic-Node-Based-Code-Editor',
     icon: Star,
     color: 'from-amber-500 to-yellow-500',
     featured: true,
-    highlights: [
-      'Rápido',
-      'Seguro',
-      'Moderno',
-      'Multiplataforma',
-      'Ideal para 100–1000 nodos',
+    highlightKeys: [
+      'projects.ultraOmega.highlight1',
+      'projects.ultraOmega.highlight2',
+      'projects.ultraOmega.highlight3',
+      'projects.ultraOmega.highlight4',
+      'projects.ultraOmega.highlight5',
     ],
   },
   {
     id: 5,
-    title: 'Omega Visual Editor - Desktop (C++/Vulkan+Qt)',
-    description: 'Intento inicial desarrollado principalmente con Python, pero fue un intento de otra idea que no logré hacer funcionar completamente. Aunque no alcanzó el objetivo esperado, esta experiencia sirvió como inspiración para crear otras versiones (Omega-Visual Web y Ultra-Omega) que demostraron avances significativos y funcionamiento real.',
+    titleKey: 'projects.omegaDesktop.title',
+    descriptionKey: 'projects.omegaDesktop.description',
     tech: ['Python', 'C++', 'Vulkan', 'Qt'],
     link: 'https://github.com/AndreeSalazar/Omega-Visual-Semantic-Node-Based-Code-Editor',
     icon: Code2,
     color: 'from-gray-500 to-slate-500',
     isLegacy: true,
-    highlights: [
-      'Intento inicial',
-      'Inspiración para otras versiones',
-      'Demostró avances posteriores',
+    highlightKeys: [
+      'projects.omegaDesktop.highlight1',
+      'projects.omegaDesktop.highlight2',
+      'projects.omegaDesktop.highlight3',
     ],
   },
   {
     id: 6,
-    title: 'Professional Portfolio',
-    description: 'Sitio web de portafolio responsivo con animaciones CSS avanzadas, formulario de contacto funcional y rendimiento optimizado. Demuestra habilidades en desarrollo web puro y optimización.',
+    titleKey: 'projects.portfolio.title',
+    descriptionKey: 'projects.portfolio.description',
     tech: ['HTML5', 'CSS3', 'JavaScript'],
     link: 'https://github.com/AndreeSalazar/Web-Portfolio-Personal-1',
     icon: Award,
@@ -115,21 +116,27 @@ const cardVariants = {
 }
 
 export default function ProjectsPage() {
+  const { t } = useLanguage()
   const [searchQuery, setSearchQuery] = useState('')
   const [filterTech, setFilterTech] = useState<string | null>(null)
 
+  const achievements = getAchievements(t)
+
+  // Get all techs (already includes translated "Multiplataforma")
   const allTechs = Array.from(new Set(achievements.flatMap((a) => a.tech)))
 
   const filteredProjects = achievements.filter((project) => {
+    const title = t(project.titleKey)
+    const description = t(project.descriptionKey)
     const matchesSearch =
-      project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      project.description.toLowerCase().includes(searchQuery.toLowerCase())
+      title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      description.toLowerCase().includes(searchQuery.toLowerCase())
     const matchesTech = !filterTech || project.tech.includes(filterTech)
     return matchesSearch && matchesTech
   })
 
   return (
-    <div className="h-screen w-screen flex flex-col bg-black overflow-auto metallic-overlay relative">
+    <div className="min-h-screen w-full flex flex-col bg-black overflow-x-hidden metallic-overlay relative">
       {/* Animated background effects */}
       <motion.div
         className="absolute inset-0 pointer-events-none z-0"
@@ -176,7 +183,7 @@ export default function ProjectsPage() {
         <ContactBar />
       </div>
       
-      <div className="flex-1 max-w-7xl mx-auto w-full px-8 py-12 relative z-10">
+      <div className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 md:px-8 py-6 md:py-12 relative z-10">
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -234,12 +241,12 @@ export default function ProjectsPage() {
                   transition={{ delay: 0.3 }}
                 >
                   <motion.h1 
-                    className="text-5xl font-bold text-white mb-1 tracking-tight"
+                    className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-1 tracking-tight"
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.4 }}
                   >
-                    Mis <motion.span 
+                    {t('projects.title').split(' ')[0]} <motion.span 
                       className="text-primary inline-block"
                       animate={{
                         textShadow: [
@@ -254,16 +261,16 @@ export default function ProjectsPage() {
                         ease: 'easeInOut',
                       }}
                     >
-                      Proyectos
+                      {t('projects.title').split(' ').slice(1).join(' ')}
                     </motion.span>
                   </motion.h1>
                   <motion.p 
-                    className="text-gray-400 text-lg"
+                    className="text-gray-400 text-sm sm:text-base md:text-lg"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5 }}
                   >
-                    Construcciones reales, código funcional, resultados tangibles
+                    {t('projects.subtitle')}
                   </motion.p>
                 </motion.div>
               </div>
@@ -282,7 +289,7 @@ export default function ProjectsPage() {
                   y: -4,
                   transition: { duration: 0.3 }
                 }}
-                className="bg-black/60 backdrop-blur-sm border border-white/10 rounded-xl p-6 mb-6 relative overflow-hidden group brushed-metal"
+                className="bg-black/60 backdrop-blur-sm border border-white/10 rounded-xl p-4 md:p-6 mb-4 md:mb-6 relative overflow-hidden group brushed-metal"
                 style={{
                   boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.4)',
                 }}
@@ -328,28 +335,25 @@ export default function ProjectsPage() {
                     </div>
                     <div className="flex-1">
                       <h3 className="text-lg font-bold text-white mb-2">
-                        Un año, múltiples tecnologías, resultados reales
+                        {t('projects.statsDescription')}
                       </h3>
                       <p className="text-sm text-gray-300 leading-relaxed">
-                        Todos estos proyectos fueron desarrollados en <span className="text-primary font-semibold">un solo año</span>, 
-                        demostrando mi capacidad para <span className="text-white font-medium">experimentar y aplicar</span> conocimientos 
-                        en múltiples lenguajes y tecnologías. No son conceptos teóricos—cada proyecto es <span className="text-primary font-medium">funcional y está disponible</span> para demostrar competencia práctica 
-                        en desarrollo real. Desde motores de renderizado en C++ hasta aplicaciones web en Angular, pasando por experimentos en Python y versiones avanzadas en Rust.
+                        {t('projects.statsText')}
                       </p>
                     </div>
                   </div>
                   
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4 pt-4 border-t border-primary/20">
                     {[
-                      { label: 'Proyectos', value: '6+', icon: Rocket, color: 'from-blue-500 to-cyan-500' },
-                      { label: 'Lenguajes', value: '8+', icon: Code2, color: 'from-purple-500 to-pink-500' },
-                      { label: 'Tecnologías', value: '15+', icon: Star, color: 'from-yellow-500 to-orange-500' },
-                      { label: 'Año', value: '2024', icon: Award, color: 'from-green-500 to-emerald-500' },
+                      { labelKey: 'projects.statsProjects', value: '6+', icon: Rocket, color: 'from-blue-500 to-cyan-500' },
+                      { labelKey: 'projects.statsLanguages', value: '8+', icon: Code2, color: 'from-purple-500 to-pink-500' },
+                      { labelKey: 'projects.statsTechnologies', value: '15+', icon: Star, color: 'from-yellow-500 to-orange-500' },
+                      { labelKey: 'projects.statsYear', value: '2024', icon: Award, color: 'from-green-500 to-emerald-500' },
                     ].map((stat, idx) => {
                       const Icon = stat.icon
                       return (
                         <motion.div
-                          key={stat.label}
+                          key={stat.labelKey}
                           initial={{ opacity: 0, scale: 0, rotate: -180 }}
                           animate={{ opacity: 1, scale: 1, rotate: 0 }}
                           transition={{ 
@@ -388,7 +392,7 @@ export default function ProjectsPage() {
                               {stat.value}
                             </motion.div>
                             <div className="text-xs text-gray-400 uppercase tracking-wider font-semibold">
-                              {stat.label}
+                              {t(stat.labelKey)}
                             </div>
                           </motion.div>
                         </motion.div>
@@ -400,34 +404,34 @@ export default function ProjectsPage() {
             </motion.div>
 
             {/* Search and Filter */}
-            <div className="flex flex-col md:flex-row gap-4 mb-6">
+            <div className="flex flex-col md:flex-row gap-3 md:gap-4 mb-4 md:mb-6">
               <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Buscar proyectos..."
-                  className="w-full pl-10 pr-4 py-2.5 bg-dark-lighter border border-dark-lighter rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 transition-colors"
+                  placeholder={t('projects.search')}
+                  className="w-full pl-9 md:pl-10 pr-4 py-2 md:py-2.5 bg-dark-lighter border border-dark-lighter rounded-lg text-sm md:text-base text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 transition-colors"
                 />
               </div>
               <div className="flex items-center gap-2 flex-wrap">
-                <Filter size={18} className="text-gray-400" />
+                <Filter size={16} className="text-gray-400 hidden sm:block" />
                 <button
                   onClick={() => setFilterTech(null)}
-                  className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
+                  className={`px-2.5 md:px-3 py-1.5 rounded-lg text-xs md:text-sm transition-colors ${
                     filterTech === null
                       ? 'bg-primary text-white'
                       : 'bg-dark-lighter text-gray-300 hover:bg-dark-lighter/80'
                   }`}
                 >
-                  Todos
+                  {t('projects.all')}
                 </button>
                 {allTechs.map((tech) => (
                   <button
                     key={tech}
                     onClick={() => setFilterTech(filterTech === tech ? null : tech)}
-                    className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
+                    className={`px-2.5 md:px-3 py-1.5 rounded-lg text-xs md:text-sm transition-colors ${
                       filterTech === tech
                         ? 'bg-primary text-white'
                         : 'bg-dark-lighter text-gray-300 hover:bg-dark-lighter/80'
@@ -444,7 +448,7 @@ export default function ProjectsPage() {
           {filteredProjects.length > 0 ? (
             <motion.div
               variants={containerVariants}
-              className="grid grid-cols-1 md:grid-cols-2 gap-6"
+              className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6"
             >
               {filteredProjects.map((achievement, index) => (
               <motion.div
@@ -468,7 +472,7 @@ export default function ProjectsPage() {
                     damping: 20
                   },
                 }}
-                className="group relative bg-black/60 backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:border-primary/50 transition-all duration-500 overflow-hidden perspective-1000 brushed-metal"
+                className="group relative bg-black/60 backdrop-blur-sm rounded-xl p-4 md:p-6 border border-white/10 hover:border-primary/50 transition-all duration-500 overflow-hidden perspective-1000 brushed-metal"
                 style={{
                   boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.4)',
                   transformStyle: 'preserve-3d',
@@ -608,7 +612,7 @@ export default function ProjectsPage() {
                           }}
                           className="relative z-10"
                         >
-                          Destacado
+                          {t('projects.featured')}
                         </motion.span>
                       </motion.span>
                     )}
@@ -646,7 +650,7 @@ export default function ProjectsPage() {
                           }}
                           className="relative z-10"
                         >
-                          En línea
+                          {t('projects.web')}
                         </motion.span>
                       </motion.span>
                     )}
@@ -662,7 +666,7 @@ export default function ProjectsPage() {
                         whileHover={{ scale: 1.1 }}
                         className="px-3 py-1.5 rounded-full bg-gray-500/20 text-gray-400 text-xs font-semibold border border-gray-500/30"
                       >
-                        Versión inicial
+                        {t('projects.legacy')}
                       </motion.span>
                     )}
                     {achievement.isBase && (
@@ -688,7 +692,7 @@ export default function ProjectsPage() {
                             ease: 'linear',
                           }}
                         />
-                        <span className="relative z-10">Base experimental</span>
+                        <span className="relative z-10">{t('projects.experimental')}</span>
                       </motion.span>
                     )}
                   </div>
@@ -727,7 +731,7 @@ export default function ProjectsPage() {
                         ease: 'easeInOut',
                       }}
                     >
-                      {achievement.title}
+                      {t(achievement.titleKey)}
                     </motion.span>
                   </motion.h3>
                   <motion.p 
@@ -744,11 +748,11 @@ export default function ProjectsPage() {
                       transition: { duration: 0.2 }
                     }}
                   >
-                    {achievement.description}
+                    {t(achievement.descriptionKey)}
                   </motion.p>
 
                   {/* Highlights for projects with highlights */}
-                  {achievement.highlights && (
+                  {achievement.highlightKeys && (
                     <motion.div 
                       className="mb-4 p-4 bg-black/40 backdrop-blur-sm rounded-xl border border-white/10 relative overflow-hidden group/highlights brushed-metal"
                     style={{
@@ -771,11 +775,11 @@ export default function ProjectsPage() {
                         }}
                       />
                       <div className="text-xs text-gray-400 mb-3 font-semibold uppercase tracking-wider relative z-10">
-                        Características
+                        {t('projects.features')}
                       </div>
                       <div className="flex flex-wrap gap-2 relative z-10">
-                        {achievement.highlights.map((highlight, highlightIndex) => {
-                          const isUltraOmega = achievement.title === 'Ultra-Omega'
+                        {achievement.highlightKeys.map((highlightKey, highlightIndex) => {
+                          const isUltraOmega = achievement.titleKey === 'projects.ultraOmega.title'
                           const isBase = achievement.isBase
                           const isLegacy = achievement.isLegacy
                           
@@ -790,7 +794,7 @@ export default function ProjectsPage() {
                           
                           return (
                             <motion.span
-                              key={highlight}
+                              key={highlightKey}
                               initial={{ opacity: 0, scale: 0, rotate: -180 }}
                               animate={{ opacity: 1, scale: 1, rotate: 0 }}
                               transition={{
@@ -831,7 +835,7 @@ export default function ProjectsPage() {
                                 >
                                   {isUltraOmega ? '→' : '•'}
                                 </motion.span>
-                                {highlight}
+                                {t(highlightKey)}
                               </span>
                             </motion.span>
                           )
@@ -913,7 +917,7 @@ export default function ProjectsPage() {
                           <Github size={16} />
                         )}
                       </motion.div>
-                      <span>{achievement.isWeb ? 'Ver aplicación' : 'Ver en GitHub'}</span>
+                      <span>{achievement.isWeb ? t('projects.viewApp') : t('projects.viewGitHub')}</span>
                       <motion.div
                         animate={{ x: [0, 4, 0] }}
                         transition={{
@@ -927,7 +931,7 @@ export default function ProjectsPage() {
                     </motion.a>
                     {achievement.isWeb && achievement.link.includes('github.io') && (
                       <motion.a
-                        href={`https://github.com/AndreeSalazar/${achievement.title.toLowerCase().replace(/\s+/g, '-')}`}
+                        href={`https://github.com/AndreeSalazar/${t(achievement.titleKey).toLowerCase().replace(/\s+/g, '-')}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         whileHover={{ 
@@ -941,7 +945,7 @@ export default function ProjectsPage() {
                         }}
                       >
                         <Github size={14} />
-                        Código
+                        {t('projects.code')}
                       </motion.a>
                     )}
                   </motion.div>
@@ -955,8 +959,8 @@ export default function ProjectsPage() {
               animate={{ opacity: 1 }}
               className="text-center py-16"
             >
-              <p className="text-gray-400 text-lg mb-2">No se encontraron proyectos</p>
-              <p className="text-gray-500 text-sm">Intenta con otros filtros o términos de búsqueda</p>
+              <p className="text-gray-400 text-lg mb-2">{t('projects.noResults')}</p>
+              <p className="text-gray-500 text-sm">{t('projects.noResultsDesc')}</p>
             </motion.div>
           )}
         </motion.div>

@@ -2,6 +2,7 @@
   "name": "personal-profesional",
   "version": "1.0.0",
   "private": true,
+  "homepage": "https://AndreeSalazar.github.io/Personal-Profesional",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

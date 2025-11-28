@@ -36,8 +36,11 @@ jobs:
         run: npm run build
         env:
           # Si tu repositorio NO es username.github.io, descomenta y ajusta:
-          # BASE_PATH: '/nombre-repositorio'
+          # BASE_PATH: '/Personal-Profesional'
+          # NEXT_PUBLIC_BASE_PATH: '/Personal-Profesional'
           BASE_PATH: ''
+          NEXT_PUBLIC_BASE_PATH: ''
+          NODE_ENV: 'production'
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

@@ -6,6 +6,7 @@ import Link from 'next/link'
 import ContactBar from '@/components/ContactBar'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import TechnologySection from '@/components/TechnologySection'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -32,8 +33,10 @@ const itemVariants = {
 }
 
 export default function ProfilePage() {
+  const { t } = useLanguage()
+  
   return (
-    <div className="h-screen w-screen flex flex-col bg-black overflow-auto metallic-overlay relative">
+    <div className="min-h-screen w-full flex flex-col bg-black overflow-x-hidden metallic-overlay relative">
       {/* Animated background effects */}
       <motion.div
         className="absolute inset-0 pointer-events-none z-0"
@@ -80,7 +83,7 @@ export default function ProfilePage() {
         <ContactBar />
       </div>
       
-      <div className="flex-1 max-w-6xl mx-auto w-full px-8 py-12 relative z-10">
+      <div className="flex-1 max-w-6xl mx-auto w-full px-4 sm:px-6 md:px-8 py-6 md:py-12 relative z-10">
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -92,14 +95,14 @@ export default function ProfilePage() {
           </motion.div>
 
           {/* Profile Content */}
-          <div className="flex items-start gap-8 mb-12">
+          <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6 md:gap-8 mb-8 md:mb-12">
             {/* Avatar */}
             <motion.div
               variants={itemVariants}
-              className="relative shrink-0"
+              className="relative shrink-0 self-center sm:self-start"
             >
               <motion.div
-                className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center glow-orange relative overflow-hidden"
+                className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center glow-orange relative overflow-hidden"
                 animate={{
                   boxShadow: [
                     '0 0 20px rgba(255, 107, 53, 0.3)',
@@ -122,7 +125,7 @@ export default function ProfilePage() {
                     ease: 'linear',
                   }}
                 />
-                <Code size={32} className="text-white relative z-10" />
+                <Code size={24} className="text-white relative z-10 sm:w-8 sm:h-8" />
               </motion.div>
               <motion.div
                 className="absolute -top-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-dark"
@@ -139,38 +142,31 @@ export default function ProfilePage() {
             </motion.div>
 
             {/* Info */}
-            <div className="flex-1">
+            <div className="flex-1 w-full text-center sm:text-left">
               <motion.h1
                 variants={itemVariants}
-                className="text-3xl font-bold text-white mb-2"
+                className="text-2xl sm:text-3xl font-bold text-white mb-2"
               >
                 Eddi Andreé Salazar Matos
               </motion.h1>
               <motion.p
                 variants={itemVariants}
-                className="text-lg text-primary mb-4 font-semibold"
+                className="text-base sm:text-lg text-primary mb-3 md:mb-4 font-semibold"
               >
-                Systems & Full Stack Developer
+                {t('profile.fullstackDeveloper')}
               </motion.p>
               <motion.p
                 variants={itemVariants}
-                className="text-gray-300 mb-4 leading-relaxed"
+                className="text-sm sm:text-base text-gray-300 mb-4 leading-relaxed"
               >
-                Desarrollador de sistemas y full stack desde Lima, Perú 🇵🇪. 
-                Construyo herramientas, motores de renderizado y arquitecturas limpias. 
-                Especializado en C++/Rust/ASM para rendimiento y TypeScript/Python para productos.
+                {t('profile.description')}
               </motion.p>
               <motion.div
                 variants={itemVariants}
                 className="bg-primary/10 border border-primary/20 rounded-lg p-4 mb-6"
               >
                 <p className="text-sm text-gray-300 leading-relaxed">
-                  <span className="text-primary font-semibold">Experimentador activo</span> con un enfoque práctico: 
-                  en el último año he desarrollado aplicaciones completas en Angular, motores de renderizado con C++/Vulkan, 
-                  y sistemas en múltiples lenguajes. Mi filosofía es <span className="text-white font-medium">aprender haciendo</span>— 
-                  cada proyecto es una oportunidad para dominar nuevas tecnologías y aplicar conocimientos de forma real. 
-                  No solo estudio lenguajes de programación, los <span className="text-primary font-medium">implemento en proyectos funcionales</span> 
-                  que demuestran competencia práctica y capacidad de entrega.
+                  {t('profile.approach')}
                 </p>
               </motion.div>
 
@@ -213,12 +209,12 @@ export default function ProfilePage() {
           {/* Additional Info Sections */}
           <motion.div
             variants={itemVariants}
-            className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6"
+            className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-4 md:mb-6"
           >
 
             <motion.div
               whileHover={{ y: -4 }}
-              className="bg-black/60 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:border-primary/30 transition-all duration-500 relative overflow-hidden group brushed-metal"
+              className="bg-black/60 backdrop-blur-sm rounded-xl md:rounded-2xl p-4 md:p-6 lg:p-8 border border-white/10 hover:border-primary/30 transition-all duration-500 relative overflow-hidden group brushed-metal"
               style={{
                 boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.4)',
               }}
@@ -284,21 +280,21 @@ export default function ProfilePage() {
                     <Target className="text-primary" size={24} />
                   </motion.div>
                   <div>
-                    <h3 className="text-2xl font-bold text-white tracking-tight">Enfoque</h3>
-                    <p className="text-sm text-gray-400 mt-0.5">Áreas de especialización</p>
+                    <h3 className="text-2xl font-bold text-white tracking-tight">{t('profile.focusTitle')}</h3>
+                    <p className="text-sm text-gray-400 mt-0.5">{t('profile.focusSubtitle')}</p>
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {[
-                    { name: 'Aplicaciones Web', icon: '🌐', color: 'from-blue-500/10 to-cyan-500/10' },
-                    { name: 'Programación de Sistemas', icon: '⚙️', color: 'from-gray-500/10 to-slate-500/10' },
-                    { name: 'Motores Gráficos', icon: '🎮', color: 'from-purple-500/10 to-pink-500/10' },
-                    { name: 'Optimización de Rendimiento', icon: '⚡', color: 'from-yellow-500/10 to-orange-500/10' },
-                    { name: 'Arquitectura Limpia', icon: '🏗️', color: 'from-emerald-500/10 to-teal-500/10' },
-                    { name: 'Programación de Bajo Nivel', icon: '🔧', color: 'from-indigo-500/10 to-blue-500/10' },
+                    { nameKey: 'profile.focusWebApps', icon: '🌐', color: 'from-blue-500/10 to-cyan-500/10' },
+                    { nameKey: 'profile.focusSystems', icon: '⚙️', color: 'from-gray-500/10 to-slate-500/10' },
+                    { nameKey: 'profile.focusGraphics', icon: '🎮', color: 'from-purple-500/10 to-pink-500/10' },
+                    { nameKey: 'profile.focusOptimization', icon: '⚡', color: 'from-yellow-500/10 to-orange-500/10' },
+                    { nameKey: 'profile.focusArchitecture', icon: '🏗️', color: 'from-emerald-500/10 to-teal-500/10' },
+                    { nameKey: 'profile.focusLowLevel', icon: '🔧', color: 'from-indigo-500/10 to-blue-500/10' },
                   ].map((item, index) => (
                     <motion.div
-                      key={item.name}
+                      key={item.nameKey}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.1 * index }}
@@ -316,7 +312,7 @@ export default function ProfilePage() {
                         <div className="flex-1">
                           <div className="w-1.5 h-1.5 rounded-full bg-primary mb-2 group-hover/item:scale-150 transition-transform" />
                           <span className="text-sm text-gray-200 group-hover/item:text-white transition-colors font-medium block">
-                            {item.name}
+                            {t(item.nameKey)}
                           </span>
                         </div>
                       </div>
@@ -394,28 +390,28 @@ export default function ProfilePage() {
                     <BookOpen className="text-purple-400" size={24} />
                   </motion.div>
                   <div>
-                    <h3 className="text-2xl font-bold text-white tracking-tight">Aprendiendo</h3>
-                    <p className="text-sm text-gray-400 mt-0.5">Tecnologías en desarrollo</p>
+                    <h3 className="text-2xl font-bold text-white tracking-tight">{t('profile.learningTitle')}</h3>
+                    <p className="text-sm text-gray-400 mt-0.5">{t('profile.learningSubtitle')}</p>
                   </div>
                 </div>
                 <div className="space-y-4">
                   {[
-                    { name: 'WebAssembly (WASM)', level: 'high' },
-                    { name: 'Técnicas avanzadas de Vulkan', level: 'medium' },
-                    { name: 'Ecosistema de Rust', level: 'high' },
-                    { name: 'Patrones de arquitectura avanzados', level: 'medium' },
-                    { name: 'Optimización de sistemas', level: 'medium' },
+                    { nameKey: 'profile.learningWasm', level: 'high' },
+                    { nameKey: 'profile.learningVulkan', level: 'medium' },
+                    { nameKey: 'profile.learningRust', level: 'high' },
+                    { nameKey: 'profile.learningArchitecture', level: 'medium' },
+                    { nameKey: 'profile.learningOptimization', level: 'medium' },
                   ].map((item, index) => {
                     const levelConfig = {
-                      high: { width: '85%', color: 'from-purple-500 via-pink-500 to-rose-500', label: 'Activo', bg: 'bg-purple-500/10', border: 'border-purple-500/30', text: 'text-purple-400' },
-                      medium: { width: '65%', color: 'from-blue-500 via-indigo-500 to-purple-500', label: 'En progreso', bg: 'bg-blue-500/10', border: 'border-blue-500/30', text: 'text-blue-400' },
-                      low: { width: '40%', color: 'from-cyan-500 via-blue-500 to-indigo-500', label: 'Iniciando', bg: 'bg-cyan-500/10', border: 'border-cyan-500/30', text: 'text-cyan-400' },
+                      high: { width: '85%', color: 'from-purple-500 via-pink-500 to-rose-500', labelKey: 'profile.active', bg: 'bg-purple-500/10', border: 'border-purple-500/30', text: 'text-purple-400' },
+                      medium: { width: '65%', color: 'from-blue-500 via-indigo-500 to-purple-500', labelKey: 'profile.inProgress', bg: 'bg-blue-500/10', border: 'border-blue-500/30', text: 'text-blue-400' },
+                      low: { width: '40%', color: 'from-cyan-500 via-blue-500 to-indigo-500', labelKey: 'profile.starting', bg: 'bg-cyan-500/10', border: 'border-cyan-500/30', text: 'text-cyan-400' },
                     }
                     const config = levelConfig[item.level as keyof typeof levelConfig]
                     
                     return (
                       <motion.div
-                        key={item.name}
+                        key={item.nameKey}
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 * index }}
@@ -424,10 +420,10 @@ export default function ProfilePage() {
                       >
                         <div className="flex items-center justify-between mb-3">
                           <span className="text-sm text-gray-200 group-hover:text-white transition-colors font-medium">
-                            {item.name}
+                            {t(item.nameKey)}
                           </span>
                           <span className={`text-xs px-2.5 py-1 rounded-full ${config.bg} ${config.text} border ${config.border} font-medium`}>
-                            {config.label}
+                            {t(config.labelKey)}
                           </span>
                         </div>
                         <div className="h-1.5 bg-dark/50 rounded-full overflow-hidden relative">
@@ -504,7 +500,7 @@ export default function ProfilePage() {
                   >
                     <Briefcase className="text-green-400" size={22} />
                   </motion.div>
-                  <h3 className="text-xl font-bold text-white">Disponible</h3>
+                  <h3 className="text-xl font-bold text-white">{t('profile.availableTitle')}</h3>
                 </div>
                 <div className="space-y-4">
                   <motion.div
@@ -518,9 +514,9 @@ export default function ProfilePage() {
                       <MapPin size={20} className="text-green-400" />
                     </motion.div>
                     <div className="flex-1">
-                      <div className="text-xs text-gray-400 uppercase mb-1 font-semibold">Ubicación</div>
+                      <div className="text-xs text-gray-400 uppercase mb-1 font-semibold">{t('profile.location')}</div>
                       <div className="text-sm text-white font-medium group-hover/item:text-green-400 transition-colors">
-                        Lima, Perú 🇵🇪
+                        {t('profile.locationValue')}
                       </div>
                     </div>
                   </motion.div>
@@ -535,9 +531,9 @@ export default function ProfilePage() {
                       <Calendar size={20} className="text-green-400" />
                     </motion.div>
                     <div className="flex-1">
-                      <div className="text-xs text-gray-400 uppercase mb-1 font-semibold">Estado</div>
+                      <div className="text-xs text-gray-400 uppercase mb-1 font-semibold">{t('profile.status')}</div>
                       <div className="text-sm text-white font-medium group-hover/item:text-green-400 transition-colors">
-                        Disponible para oportunidades
+                        {t('profile.statusValue')}
                       </div>
                     </div>
                   </motion.div>
@@ -549,16 +545,16 @@ export default function ProfilePage() {
                       >
                         <TrendingUp size={16} className="text-green-400" />
                       </motion.div>
-                      <p className="text-xs text-gray-400 uppercase font-semibold">Buscando</p>
+                      <p className="text-xs text-gray-400 uppercase font-semibold">{t('profile.lookingFor')}</p>
                     </div>
                     <div className="space-y-2.5">
                       {[
-                        { name: 'Full Stack Development', icon: '💻' },
-                        { name: 'Systems Programming', icon: '⚙️' },
-                        { name: 'Graphics Engine Development', icon: '🎨' },
+                        { nameKey: 'profile.lookingFullStack', icon: '💻' },
+                        { nameKey: 'profile.lookingSystems', icon: '⚙️' },
+                        { nameKey: 'profile.lookingGraphics', icon: '🎨' },
                       ].map((item, index) => (
                         <motion.div
-                          key={item.name}
+                          key={item.nameKey}
                           initial={{ opacity: 0, x: -10 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: 0.1 * index }}
@@ -568,7 +564,7 @@ export default function ProfilePage() {
                           <span className="text-base">{item.icon}</span>
                           <div className="w-2 h-2 rounded-full bg-green-400 group-hover/item:scale-150 transition-transform" />
                           <span className="text-sm text-gray-300 group-hover/item:text-white transition-colors font-medium flex-1">
-                            {item.name}
+                            {t(item.nameKey)}
                           </span>
                         </motion.div>
                       ))}
@@ -582,23 +578,23 @@ export default function ProfilePage() {
           {/* Stats Section */}
           <motion.div
             variants={itemVariants}
-            className="grid grid-cols-2 md:grid-cols-4 gap-4"
+            className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4"
           >
             {[
-              { label: 'Proyectos', value: '10+', icon: Rocket, color: 'from-blue-500 to-cyan-500', bgColor: 'bg-blue-500/20' },
-              { label: 'Tecnologías', value: '15+', icon: Cpu, color: 'from-purple-500 to-pink-500', bgColor: 'bg-purple-500/20' },
-              { label: 'Años Exp.', value: '3+', icon: Award, color: 'from-yellow-500 to-orange-500', bgColor: 'bg-yellow-500/20' },
-              { label: 'Repos', value: '10+', icon: Code, color: 'from-green-500 to-emerald-500', bgColor: 'bg-green-500/20' },
+              { labelKey: 'profile.statsProjects', value: '10+', icon: Rocket, color: 'from-blue-500 to-cyan-500', bgColor: 'bg-blue-500/20' },
+              { labelKey: 'profile.statsTechnologies', value: '15+', icon: Cpu, color: 'from-purple-500 to-pink-500', bgColor: 'bg-purple-500/20' },
+              { labelKey: 'profile.statsYears', value: '3+', icon: Award, color: 'from-yellow-500 to-orange-500', bgColor: 'bg-yellow-500/20' },
+              { labelKey: 'profile.statsRepos', value: '10+', icon: Code, color: 'from-green-500 to-emerald-500', bgColor: 'bg-green-500/20' },
             ].map((stat, index) => {
               const Icon = stat.icon
               return (
                 <motion.div
-                  key={stat.label}
+                  key={stat.labelKey}
                   initial={{ opacity: 0, y: 20, scale: 0.9 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   transition={{ delay: 0.5 + index * 0.1, type: 'spring', stiffness: 200 }}
                   whileHover={{ scale: 1.08, y: -8, rotate: 2 }}
-                  className="bg-black/60 backdrop-blur-sm rounded-lg p-6 border border-white/10 hover:border-primary/50 transition-all text-center relative overflow-hidden group brushed-metal"
+                  className="bg-black/60 backdrop-blur-sm rounded-lg p-4 md:p-6 border border-white/10 hover:border-primary/50 transition-all text-center relative overflow-hidden group brushed-metal"
                   style={{
                     boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.4)',
                   }}
@@ -658,7 +654,7 @@ export default function ProfilePage() {
                       {stat.value}
                     </motion.div>
                     <div className="text-xs text-gray-400 uppercase tracking-wider font-semibold">
-                      {stat.label}
+                      {t(stat.labelKey)}
                     </div>
                   </div>
                 </motion.div>
