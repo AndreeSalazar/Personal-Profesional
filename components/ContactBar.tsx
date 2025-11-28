@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { Mail, Github, Phone, Linkedin, ExternalLink } from 'lucide-react'
+import SearchBar from './SearchBar'
 
 const contacts = [
   {
@@ -65,11 +66,44 @@ export default function ContactBar() {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="w-full bg-dark-lighter border-b border-dark-lighter px-8 py-4"
+      className="w-full bg-black/95 backdrop-blur-sm border-b border-white/5 px-6 py-3 shrink-0 brushed-metal relative"
+      style={{
+        boxShadow: '0 2px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
+      }}
     >
-      <div className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-between flex-wrap gap-4">
-          {contacts.map((contact, index) => (
+      {/* Animated background particles */}
+      {[...Array(3)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute w-2 h-2 bg-primary/20 rounded-full"
+          initial={{
+            x: Math.random() * 100 + '%',
+            y: '50%',
+            opacity: 0,
+          }}
+          animate={{
+            x: [null, Math.random() * 100 + '%'],
+            y: ['50%', Math.random() * 100 + '%'],
+            opacity: [0, 0.5, 0],
+          }}
+          transition={{
+            duration: 4 + i,
+            repeat: Infinity,
+            delay: i * 0.5,
+            ease: 'easeInOut',
+          }}
+        />
+      ))}
+      
+      <div className="max-w-7xl mx-auto relative z-10">
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          {/* Search Bar - Only show on main pages */}
+          <div className="hidden md:block">
+            <SearchBar />
+          </div>
+          
+          <div className="flex items-center justify-between flex-wrap gap-3 flex-1 md:justify-end">
+            {contacts.map((contact, index) => (
             <motion.a
               key={contact.label}
               variants={itemVariants}
@@ -84,10 +118,14 @@ export default function ContactBar() {
               className="flex items-center gap-3 group cursor-pointer"
             >
               <motion.div
-                className={`p-2 rounded-lg bg-dark ${contact.color} group-hover:bg-primary/20 transition-colors relative overflow-hidden`}
+                className={`p-1.5 rounded-lg bg-black/60 backdrop-blur-sm ${contact.color} group-hover:bg-primary/20 transition-colors relative overflow-hidden border border-white/5`}
+                style={{
+                  boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 8px rgba(0, 0, 0, 0.3)',
+                }}
                 whileHover={{ 
                   rotate: 360,
                   scale: 1.1,
+                  boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 4px 12px rgba(255, 107, 53, 0.3)',
                 }}
                 transition={{ duration: 0.5 }}
               >
@@ -97,21 +135,22 @@ export default function ContactBar() {
                   whileHover={{ x: '100%' }}
                   transition={{ duration: 0.6 }}
                 />
-                <contact.icon size={18} className="relative z-10" />
+                <contact.icon size={16} className="relative z-10" />
               </motion.div>
               <div>
-                <div className="text-xs text-gray-500 uppercase tracking-wider">
+                <div className="text-xs text-gray-500 uppercase tracking-wider mb-0.5">
                   {contact.label}
                 </div>
-                <div className={`text-sm font-medium ${contact.color} group-hover:text-primary transition-colors flex items-center gap-1`}>
+                <div className={`text-xs font-medium ${contact.color} group-hover:text-primary transition-colors flex items-center gap-1`}>
                   {contact.value}
                   {contact.href.startsWith('http') && (
-                    <ExternalLink size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <ExternalLink size={10} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                   )}
                 </div>
               </div>
             </motion.a>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </motion.div>

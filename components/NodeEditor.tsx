@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect } from 'react'
+import { motion } from 'framer-motion'
 import ReactFlow, {
   Background,
   Controls,
@@ -82,13 +83,22 @@ export default function NodeEditor() {
   const handleNodesChange = useCallback(
     (changes: NodeChange[]) => {
       onNodesChange(changes)
-      // Update store after changes are applied
+      // Update store after changes are applied - only sync position changes
       setTimeout(() => {
-        const updatedNodes = nodes.map((n) => ({ ...n }))
+        const updatedNodes = storeNodes.map((storeNode) => {
+          const reactFlowNode = nodes.find((n) => n.id === storeNode.id)
+          if (reactFlowNode) {
+            return {
+              ...storeNode,
+              position: reactFlowNode.position,
+            }
+          }
+          return storeNode
+        })
         setNodes(updatedNodes)
       }, 0)
     },
-    [nodes, onNodesChange, setNodes]
+    [nodes, storeNodes, onNodesChange, setNodes]
   )
 
   // Handle edge changes and sync to store
@@ -96,38 +106,93 @@ export default function NodeEditor() {
     (changes: EdgeChange[]) => {
       onEdgesChange(changes)
       setTimeout(() => {
-        const updatedEdges = edges.map((e) => ({ ...e }))
-        setEdges(updatedEdges)
+        const updatedEdges = edges.map((e) => ({
+          id: e.id,
+          source: e.source,
+          target: e.target,
+          type: e.type,
+          animated: e.animated,
+          style: e.style,
+          markerEnd: e.markerEnd,
+        }))
+        setEdges(updatedEdges as any)
       }, 0)
     },
     [edges, onEdgesChange, setEdges]
   )
 
   return (
-    <div className="w-full h-full bg-dark grid-background">
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={handleNodesChange}
-        onEdgesChange={handleEdgesChange}
-        onConnect={onConnect}
-        onNodeClick={onNodeClick}
-        nodeTypes={nodeTypes}
-        defaultNodeType="custom"
-        fitView
-        className="bg-dark"
-      >
-        <Background color="#1A1A1A" gap={20} size={1} />
-        <Controls
-          className="bg-dark-lighter border border-dark-lighter"
-          showInteractive={false}
+    <div className="w-full h-full bg-black grid-background relative overflow-hidden">
+      {/* Animated background gradient */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none z-0"
+        animate={{
+          background: [
+            'radial-gradient(circle at 20% 30%, rgba(255, 107, 53, 0.05) 0%, transparent 50%)',
+            'radial-gradient(circle at 80% 70%, rgba(255, 107, 53, 0.05) 0%, transparent 50%)',
+            'radial-gradient(circle at 50% 50%, rgba(255, 107, 53, 0.08) 0%, transparent 50%)',
+            'radial-gradient(circle at 20% 30%, rgba(255, 107, 53, 0.05) 0%, transparent 50%)',
+          ],
+        }}
+        transition={{
+          duration: 10,
+          repeat: Infinity,
+          ease: 'easeInOut',
+        }}
+      />
+      
+      {/* Floating particles */}
+      {[...Array(5)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute w-1 h-1 bg-primary/20 rounded-full"
+          initial={{
+            x: Math.random() * 100 + '%',
+            y: Math.random() * 100 + '%',
+            opacity: 0,
+          }}
+          animate={{
+            y: [null, '-100px', '100px'],
+            x: [null, Math.random() * 50 - 25 + 'px'],
+            opacity: [0, 0.5, 0],
+          }}
+          transition={{
+            duration: 5 + i * 2,
+            repeat: Infinity,
+            delay: i * 0.5,
+            ease: 'easeInOut',
+          }}
         />
-        <MiniMap
-          className="bg-dark-lighter border border-dark-lighter"
-          nodeColor="#FF6B35"
-          maskColor="rgba(10, 10, 10, 0.8)"
-        />
-      </ReactFlow>
+      ))}
+      
+      <div className="relative z-10 w-full h-full">
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={handleNodesChange}
+          onEdgesChange={handleEdgesChange}
+          onConnect={onConnect}
+          onNodeClick={onNodeClick}
+          nodeTypes={nodeTypes}
+          fitView
+          className="bg-transparent"
+        >
+          <Background 
+            color="rgba(255, 255, 255, 0.02)" 
+            gap={20} 
+            size={1}
+          />
+          <Controls
+            className="bg-black/60 backdrop-blur-sm border border-white/10"
+            showInteractive={false}
+          />
+          <MiniMap
+            className="bg-black/60 backdrop-blur-sm border border-white/10"
+            nodeColor="#FF6B35"
+            maskColor="rgba(0, 0, 0, 0.8)"
+          />
+        </ReactFlow>
+      </div>
     </div>
   )
 }
