@@ -1,0 +1,98 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-inter: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+  background: #0A0A0A;
+  color: #FFFFFF;
+  font-family: var(--font-inter);
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1A1A1A;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2A2A2A;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3A3A3A;
+}
+
+/* React Flow custom styles */
+.react-flow__node {
+  font-family: var(--font-inter);
+}
+
+.react-flow__edge-path {
+  stroke: #FF6B35;
+  stroke-width: 2;
+}
+
+.react-flow__edge.selected .react-flow__edge-path {
+  stroke: #FF6B35;
+  stroke-width: 3;
+}
+
+.react-flow__connection-line {
+  stroke: #FF6B35;
+  stroke-width: 2;
+}
+
+/* Grid background */
+.grid-background {
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Glow effect */
+.glow-orange {
+  box-shadow: 0 0 10px rgba(255, 107, 53, 0.3);
+}
+
+.glow-orange:hover {
+  box-shadow: 0 0 20px rgba(255, 107, 53, 0.5);
+}
+
+/* Code editor */
+.code-editor {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* Terminal */
+.terminal {
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
