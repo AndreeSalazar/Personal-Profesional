@@ -35,11 +35,13 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          # Si tu repositorio NO es username.github.io, descomenta y ajusta:
-          # BASE_PATH: '/Personal-Profesional'
-          # NEXT_PUBLIC_BASE_PATH: '/Personal-Profesional'
-          BASE_PATH: ''
-          NEXT_PUBLIC_BASE_PATH: ''
+          # IMPORTANTE: Si tu repositorio es "Personal-Profesional" (NO es username.github.io)
+          # Descomenta las siguientes líneas y comenta las líneas vacías:
+          BASE_PATH: '/Personal-Profesional'
+          NEXT_PUBLIC_BASE_PATH: '/Personal-Profesional'
+          # Si tu repositorio ES username.github.io, usa estas líneas en su lugar:
+          # BASE_PATH: ''
+          # NEXT_PUBLIC_BASE_PATH: ''
           NODE_ENV: 'production'
 
       - name: Setup Pages
