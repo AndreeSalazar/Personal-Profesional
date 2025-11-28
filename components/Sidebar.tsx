@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Plus, FileCode, Settings, Mail, Github, Twitter, Instagram } from 'lucide-react'
+import { Plus, FileCode, Settings, Mail, Github, Twitter, Instagram, Linkedin, Phone } from 'lucide-react'
 import { useStore } from '@/store/useStore'
 
 const nodeTypes = [
@@ -111,41 +111,42 @@ export default function Sidebar() {
 
         <div>
           <h3 className="text-xs uppercase tracking-wider text-gray-400 mb-2 font-semibold">
-            SOCIAL
+            CONTACTO
           </h3>
-          <div className="flex items-center gap-3">
+          <div className="space-y-2">
             <a
-              href="#"
-              className="text-gray-300 hover:text-primary transition-colors"
+              href="mailto:eddi.salazar.dev@gmail.com"
+              className="text-gray-300 hover:text-white text-sm transition-colors flex items-center gap-2"
             >
-              <Twitter size={16} />
+              <Mail size={14} />
+              eddi.salazar.dev@gmail.com
             </a>
             <a
-              href="#"
-              className="text-gray-300 hover:text-primary transition-colors"
+              href="https://github.com/AndreeSalazar"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-300 hover:text-white text-sm transition-colors flex items-center gap-2"
             >
-              <Instagram size={16} />
+              <Github size={14} />
+              AndreeSalazar
             </a>
             <a
-              href="#"
-              className="text-gray-300 hover:text-primary transition-colors"
+              href="tel:+51945375729"
+              className="text-gray-300 hover:text-white text-sm transition-colors flex items-center gap-2"
             >
-              <Github size={16} />
+              <Phone size={14} />
+              +51 945 375 729
+            </a>
+            <a
+              href="https://www.linkedin.com/in/andreé-salazar-0b1b81304/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-300 hover:text-white text-sm transition-colors flex items-center gap-2"
+            >
+              <Linkedin size={14} />
+              LinkedIn
             </a>
           </div>
-        </div>
-
-        <div>
-          <h3 className="text-xs uppercase tracking-wider text-gray-400 mb-2 font-semibold">
-            SUPPORT
-          </h3>
-          <a
-            href="mailto:support@nodelab.studio"
-            className="text-gray-300 hover:text-white text-sm transition-colors flex items-center gap-2"
-          >
-            <Mail size={14} />
-            support@nodelab.studio
-          </a>
         </div>
       </div>
     </motion.div>
