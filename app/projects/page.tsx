@@ -85,6 +85,39 @@ const getAchievements = (t: (key: string) => string) => [
     icon: Award,
     color: 'from-green-500 to-emerald-500',
   },
+  {
+    id: 7,
+    titleKey: 'projects.fastOS.title',
+    descriptionKey: 'projects.fastOS.description',
+    tech: ['ASM (NASM)', 'C', 'Vulkan API', '64-bit'],
+    link: null, // No disponible en GitHub por razones de peso
+    demoImage: '/images/fastos-demo.png',
+    icon: Rocket,
+    color: 'from-indigo-500 to-purple-500',
+    featured: true,
+    highlightKeys: [
+      'projects.fastOS.highlight1',
+      'projects.fastOS.highlight2',
+      'projects.fastOS.highlight3',
+      'projects.fastOS.highlight4',
+    ],
+  },
+  {
+    id: 8,
+    titleKey: 'projects.graphicsEngine.title',
+    descriptionKey: 'projects.graphicsEngine.description',
+    tech: ['C++', 'Vulkan API', 'Vector Math', '2D/3D'],
+    link: null, // No disponible en GitHub por razones de peso
+    demoImage: '/images/graphics-engine-demo.png',
+    icon: Code2,
+    color: 'from-cyan-500 to-blue-500',
+    featured: true,
+    highlightKeys: [
+      'projects.graphicsEngine.highlight1',
+      'projects.graphicsEngine.highlight2',
+      'projects.graphicsEngine.highlight3',
+    ],
+  },
 ]
 
 const containerVariants = {
@@ -345,9 +378,9 @@ export default function ProjectsPage() {
                   
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4 pt-4 border-t border-primary/20">
                     {[
-                      { labelKey: 'projects.statsProjects', value: '6+', icon: Rocket, color: 'from-blue-500 to-cyan-500' },
-                      { labelKey: 'projects.statsLanguages', value: '8+', icon: Code2, color: 'from-purple-500 to-pink-500' },
-                      { labelKey: 'projects.statsTechnologies', value: '15+', icon: Star, color: 'from-yellow-500 to-orange-500' },
+                      { labelKey: 'projects.statsProjects', value: '8+', icon: Rocket, color: 'from-blue-500 to-cyan-500' },
+                      { labelKey: 'projects.statsLanguages', value: '10+', icon: Code2, color: 'from-purple-500 to-pink-500' },
+                      { labelKey: 'projects.statsTechnologies', value: '20+', icon: Star, color: 'from-yellow-500 to-orange-500' },
                       { labelKey: 'projects.statsYear', value: '2024', icon: Award, color: 'from-green-500 to-emerald-500' },
                     ].map((stat, idx) => {
                       const Icon = stat.icon
@@ -886,50 +919,86 @@ export default function ProjectsPage() {
                     ))}
                   </div>
 
+                  {/* Demo Image */}
+                  {(achievement as any).demoImage && (
+                    <motion.div
+                      className="mb-4 rounded-lg overflow-hidden border border-white/10 relative group/demo"
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: index * 0.1 + 0.45 }}
+                      whileHover={{ scale: 1.02, borderColor: 'rgba(255, 107, 53, 0.5)' }}
+                    >
+                      <div className="relative">
+                        <img
+                          src={(achievement as any).demoImage}
+                          alt={t(achievement.titleKey)}
+                          className="w-full h-auto object-cover"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover/demo:opacity-100 transition-opacity duration-300" />
+                        <div className="absolute bottom-2 left-2 right-2 opacity-0 group-hover/demo:opacity-100 transition-opacity duration-300">
+                          <div className="bg-black/80 backdrop-blur-sm rounded px-2 py-1 text-xs text-white">
+                            {t('projects.demoRunning')}
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+
                   {/* Links */}
                   <motion.div 
-                    className="flex items-center gap-3"
+                    className="flex items-center gap-3 flex-wrap"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 + 0.5 }}
                   >
-                    <motion.a
-                      href={achievement.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ 
-                        x: 8,
-                        scale: 1.05,
-                      }}
-                      whileTap={{ scale: 0.95 }}
+                    {achievement.link ? (
+                      <motion.a
+                        href={achievement.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        whileHover={{ 
+                          x: 8,
+                          scale: 1.05,
+                        }}
+                        whileTap={{ scale: 0.95 }}
                         className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary hover:text-primary-dark transition-all text-sm font-medium border border-primary/30 hover:border-primary/50 group/link backdrop-blur-sm"
                         style={{
                           boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 4px 12px rgba(255, 107, 53, 0.2)',
                         }}
-                    >
-                      <motion.div
-                        whileHover={{ rotate: 360 }}
-                        transition={{ duration: 0.5 }}
                       >
-                        {achievement.isWeb ? (
-                          <ExternalLink size={16} />
-                        ) : (
-                          <Github size={16} />
-                        )}
-                      </motion.div>
-                      <span>{achievement.isWeb ? t('projects.viewApp') : t('projects.viewGitHub')}</span>
+                        <motion.div
+                          whileHover={{ rotate: 360 }}
+                          transition={{ duration: 0.5 }}
+                        >
+                          {achievement.isWeb ? (
+                            <ExternalLink size={16} />
+                          ) : (
+                            <Github size={16} />
+                          )}
+                        </motion.div>
+                        <span>{achievement.isWeb ? t('projects.viewApp') : t('projects.viewGitHub')}</span>
+                        <motion.div
+                          animate={{ x: [0, 4, 0] }}
+                          transition={{
+                            duration: 1.5,
+                            repeat: Infinity,
+                            ease: 'easeInOut',
+                          }}
+                        >
+                          <ExternalLink size={12} />
+                        </motion.div>
+                      </motion.a>
+                    ) : (
                       <motion.div
-                        animate={{ x: [0, 4, 0] }}
-                        transition={{
-                          duration: 1.5,
-                          repeat: Infinity,
-                          ease: 'easeInOut',
-                        }}
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-500/10 text-gray-400 text-sm font-medium border border-gray-500/30 backdrop-blur-sm"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
                       >
-                        <ExternalLink size={12} />
+                        <Code2 size={16} />
+                        <span>{t('projects.notOnGitHub')}</span>
                       </motion.div>
-                    </motion.a>
-                    {achievement.isWeb && achievement.link.includes('github.io') && (
+                    )}
+                    {achievement.isWeb && achievement.link && achievement.link.includes('github.io') && (
                       <motion.a
                         href={`https://github.com/AndreeSalazar/${t(achievement.titleKey).toLowerCase().replace(/\s+/g, '-')}`}
                         target="_blank"
