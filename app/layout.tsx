@@ -23,6 +23,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" className="h-full">
+      <head>
+        {/* DNS prefetch for external resources */}
+        <link rel="dns-prefetch" href="https://github.com" />
+        <link rel="dns-prefetch" href="https://github.io" />
+      </head>
       <body className="h-full">
         <LanguageProvider>
           {children}

@@ -2,9 +2,10 @@
 
 import { motion } from 'framer-motion'
 import { LucideIcon } from 'lucide-react'
+import TechnologyLogo from './TechnologyLogos'
 
 interface SkillBadgeProps {
-  icon: LucideIcon
+  icon?: LucideIcon
   label: string
   level: 'high' | 'medium' | 'low'
   color?: string
@@ -42,6 +43,7 @@ const levelConfig = {
 
 export default function SkillBadge({ icon: Icon, label, level }: SkillBadgeProps) {
   const config = levelConfig[level]
+  const hasCustomLogo = ['C++', 'Rust', 'MOJO', 'Assembly', 'Vulkan API', 'Qt', 'TypeScript', 'Python', 'JavaScript', 'Node.js', 'Angular', 'React', 'Vue', 'HTML5', 'CSS3', 'PostgreSQL'].includes(label)
 
   return (
     <motion.div
@@ -67,9 +69,17 @@ export default function SkillBadge({ icon: Icon, label, level }: SkillBadgeProps
         {/* Header with icon and label */}
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-3">
-            <div className={`p-2 rounded-lg ${config.bgColor} ${config.textColor} group-hover:scale-110 transition-transform duration-300`}>
-              <Icon size={18} className="relative z-10" />
-            </div>
+            <motion.div 
+              className={`p-2 rounded-lg ${config.bgColor} ${config.textColor} group-hover:scale-110 transition-transform duration-300 flex items-center justify-center`}
+              whileHover={{ rotate: hasCustomLogo ? 360 : 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              {hasCustomLogo ? (
+                <TechnologyLogo name={label} size={18} className="relative z-10" />
+              ) : Icon ? (
+                <Icon size={18} className="relative z-10" />
+              ) : null}
+            </motion.div>
             <div>
               <div className="text-white font-semibold text-sm leading-tight">{label}</div>
               <div className="flex items-center gap-1.5 mt-0.5">

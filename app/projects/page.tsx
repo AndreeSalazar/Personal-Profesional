@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { Github, ExternalLink, Star, Code2, Rocket, Award, ArrowLeft, Filter, Search } from 'lucide-react'
-import { useState, useMemo, useCallback } from 'react'
+import React, { useState, useMemo, useCallback } from 'react'
 import Link from 'next/link'
 import ContactBar from '@/components/ContactBar'
 import Breadcrumbs from '@/components/Breadcrumbs'
@@ -104,28 +104,28 @@ export default function ProjectsPage() {
         style={{ willChange: 'background' }}
       />
       
-      {/* Floating particles - Reduced for performance */}
-      {[...Array(5)].map((_, i) => (
+      {/* Floating particles - Optimized: Reduced from 5 to 3 for better performance */}
+      {[...Array(3)].map((_, i) => (
         <motion.div
           key={i}
-          className="absolute w-2 h-2 bg-primary/20 rounded-full"
+          className="absolute w-1.5 h-1.5 bg-primary/15 rounded-full"
           initial={{
             x: Math.random() * 100 + '%',
             y: Math.random() * 100 + '%',
             opacity: 0,
           }}
           animate={{
-            y: [null, '-100px', '100px'],
-            x: [null, Math.random() * 50 - 25 + 'px'],
-            opacity: [0, 0.6, 0],
+            y: [null, '-80px', '80px'],
+            x: [null, Math.random() * 40 - 20 + 'px'],
+            opacity: [0, 0.4, 0],
           }}
           transition={{
-            duration: 6 + i * 2,
+            duration: 8 + i * 3,
             repeat: Infinity,
-            delay: i * 0.3,
+            delay: i * 0.5,
             ease: 'easeInOut',
           }}
-          style={{ willChange: 'transform, opacity' }}
+          style={{ willChange: 'transform' }}
         />
       ))}
       
@@ -407,10 +407,10 @@ export default function ProjectsPage() {
                 initial={{ opacity: 0, y: 50, rotateX: -15 }}
                 animate={{ opacity: 1, y: 0, rotateX: 0 }}
                 transition={{ 
-                  delay: Math.min(index * 0.1, 0.5), // Cap delay for better performance
+                  delay: Math.min(index * 0.08, 0.4), // Reduced delay for faster initial render
                   type: 'spring',
-                  stiffness: 100,
-                  damping: 15
+                  stiffness: 120,
+                  damping: 18
                 }}
                 whileHover={{
                   y: -12,
@@ -477,26 +477,27 @@ export default function ProjectsPage() {
                   }}
                 />
 
-                {/* Floating particles effect */}
-                {[...Array(3)].map((_, i) => (
+                {/* Floating particles effect - Optimized: Only show on hover, reduced count */}
+                {[...Array(2)].map((_, i) => (
                   <motion.div
                     key={i}
-                    className="absolute w-2 h-2 bg-primary/30 rounded-full opacity-0 group-hover:opacity-100"
+                    className="absolute w-1.5 h-1.5 bg-primary/25 rounded-full opacity-0 group-hover:opacity-100"
                     initial={{
                       x: Math.random() * 100 + '%',
                       y: Math.random() * 100 + '%',
                     }}
                     animate={{
-                      y: [null, '-20px', '20px'],
-                      x: [null, Math.random() * 20 - 10 + 'px'],
-                      opacity: [0, 1, 0],
+                      y: [null, '-15px', '15px'],
+                      x: [null, Math.random() * 15 - 7.5 + 'px'],
+                      opacity: [0, 0.8, 0],
                     }}
                     transition={{
-                      duration: 3 + i,
+                      duration: 4 + i * 1.5,
                       repeat: Infinity,
-                      delay: i * 0.5,
+                      delay: i * 0.6,
                       ease: 'easeInOut',
                     }}
+                    style={{ willChange: 'transform' }}
                   />
                 ))}
 
@@ -855,7 +856,8 @@ export default function ProjectsPage() {
                           className="w-full h-auto object-cover"
                           loading="lazy"
                           decoding="async"
-                          style={{ willChange: 'transform' }}
+                          fetchPriority="low"
+                          style={{ willChange: 'auto' }}
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover/demo:opacity-100 transition-opacity duration-300" />
                         <div className="absolute bottom-2 left-2 right-2 opacity-0 group-hover/demo:opacity-100 transition-opacity duration-300">

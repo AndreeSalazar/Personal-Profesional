@@ -12,6 +12,11 @@ const nextConfig = {
   basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
   assetPrefix: process.env.NEXT_PUBLIC_BASE_PATH || '',
   trailingSlash: true, // Importante para GitHub Pages - genera rutas con /
+  // Performance optimizations
+  compress: true,
+  poweredByHeader: false,
+  // Optimize bundle
+  swcMinify: true,
 }
 
 module.exports = nextConfig

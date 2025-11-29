@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Github, ExternalLink, ArrowLeft, Code2, Rocket, Star, Award, Lightbulb, Target, Trophy, AlertCircle, BookOpen, Zap, ChevronDown, ChevronUp } from 'lucide-react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
-import { useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import ContactBar from '@/components/ContactBar'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { getAllAchievements } from '../projectsData'
@@ -19,7 +19,7 @@ interface ExpandableSectionProps {
   onToggle: () => void
 }
 
-const ExpandableSection = ({ title, icon: Icon, content, delay, color, isOpen, onToggle }: ExpandableSectionProps) => {
+const ExpandableSection = React.memo(({ title, icon: Icon, content, delay, color, isOpen, onToggle }: ExpandableSectionProps) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -82,9 +82,11 @@ const ExpandableSection = ({ title, icon: Icon, content, delay, color, isOpen, o
       </motion.button>
     </motion.div>
   )
-}
+})
 
-export default function ProjectDetailClient() {
+ExpandableSection.displayName = 'ExpandableSection'
+
+function ProjectDetailClient() {
   const params = useParams()
   const { t } = useLanguage()
   const slug = params?.slug as string
@@ -145,27 +147,27 @@ export default function ProjectDetailClient() {
         style={{ willChange: 'background' }}
       />
 
-      {/* Floating particles with project color */}
-      {[...Array(8)].map((_, i) => (
+      {/* Floating particles with project color - Optimized: Reduced from 8 to 4 */}
+      {[...Array(4)].map((_, i) => (
         <motion.div
           key={i}
-          className={`absolute w-3 h-3 rounded-full bg-gradient-to-r ${project.color} opacity-20`}
+          className={`absolute w-2 h-2 rounded-full bg-gradient-to-r ${project.color} opacity-15`}
           initial={{
             x: Math.random() * 100 + '%',
             y: Math.random() * 100 + '%',
           }}
           animate={{
-            y: [null, '-150px', '150px'],
-            x: [null, Math.random() * 100 - 50 + 'px'],
-            opacity: [0.1, 0.4, 0.1],
+            y: [null, '-100px', '100px'],
+            x: [null, Math.random() * 50 - 25 + 'px'],
+            opacity: [0.05, 0.3, 0.05],
           }}
           transition={{
-            duration: 8 + i * 2,
+            duration: 10 + i * 3,
             repeat: Infinity,
-            delay: i * 0.5,
+            delay: i * 0.8,
             ease: 'easeInOut',
           }}
-          style={{ willChange: 'transform, opacity' }}
+          style={{ willChange: 'transform' }}
         />
       ))}
 
@@ -269,6 +271,8 @@ export default function ProjectDetailClient() {
                 alt={t(project.titleKey)}
                 className="w-full h-auto object-cover"
                 loading="eager"
+                fetchPriority="high"
+                decoding="async"
               />
               <motion.div
                 className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20"
@@ -467,3 +471,5 @@ export default function ProjectDetailClient() {
     </div>
   )
 }
+
+export default React.memo(ProjectDetailClient)

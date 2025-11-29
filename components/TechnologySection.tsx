@@ -1,11 +1,11 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Cpu, Code, Rocket, Database, Globe, Settings } from 'lucide-react'
+import { Cpu, Code, Rocket, Database, Globe, Settings, Zap } from 'lucide-react'
 import SkillBadge from './SkillBadge'
 
 interface Technology {
-  icon: any
+  icon?: any
   label: string
   level: 'high' | 'medium' | 'low'
 }
@@ -21,41 +21,42 @@ const categories: Category[] = [
     name: 'Systems',
     icon: Cpu,
     technologies: [
-      { icon: Cpu, label: 'C++', level: 'high' as const },
-      { icon: Rocket, label: 'Rust', level: 'high' as const },
-      { icon: Settings, label: 'Assembly', level: 'medium' as const },
-      { icon: Rocket, label: 'Vulkan API', level: 'high' as const },
-      { icon: Settings, label: 'Qt', level: 'medium' as const },
+      { label: 'C++', level: 'high' as const },
+      { label: 'Rust', level: 'high' as const },
+      { label: 'MOJO', level: 'high' as const },
+      { label: 'Assembly', level: 'medium' as const },
+      { label: 'Vulkan API', level: 'high' as const },
+      { label: 'Qt', level: 'medium' as const },
     ],
   },
   {
     name: 'Full Stack',
     icon: Code,
     technologies: [
-      { icon: Code, label: 'TypeScript', level: 'high' as const },
-      { icon: Code, label: 'Python', level: 'high' as const },
-      { icon: Code, label: 'JavaScript', level: 'high' as const },
-      { icon: Code, label: 'Node.js', level: 'high' as const },
+      { label: 'TypeScript', level: 'high' as const },
+      { label: 'Python', level: 'high' as const },
+      { label: 'JavaScript', level: 'high' as const },
+      { label: 'Node.js', level: 'high' as const },
     ],
   },
   {
     name: 'Frontend',
     icon: Globe,
     technologies: [
-      { icon: Globe, label: 'Angular', level: 'high' as const },
-      { icon: Globe, label: 'React', level: 'high' as const },
-      { icon: Globe, label: 'Vue', level: 'medium' as const },
-      { icon: Globe, label: 'HTML5', level: 'high' as const },
-      { icon: Globe, label: 'CSS3', level: 'high' as const },
+      { label: 'Angular', level: 'high' as const },
+      { label: 'React', level: 'high' as const },
+      { label: 'Vue', level: 'medium' as const },
+      { label: 'HTML5', level: 'high' as const },
+      { label: 'CSS3', level: 'high' as const },
     ],
   },
   {
     name: 'Backend',
     icon: Database,
     technologies: [
-      { icon: Database, label: 'PostgreSQL', level: 'medium' as const },
-      { icon: Database, label: 'Node.js', level: 'high' as const },
-      { icon: Database, label: 'Python', level: 'high' as const },
+      { label: 'PostgreSQL', level: 'medium' as const },
+      { label: 'Node.js', level: 'high' as const },
+      { label: 'Python', level: 'high' as const },
     ],
   },
 ]
@@ -123,7 +124,6 @@ export default function TechnologySection() {
                       transition={{ delay: categoryIndex * 0.1 + techIndex * 0.05 }}
                     >
                       <SkillBadge
-                        icon={tech.icon}
                         label={tech.label}
                         level={tech.level}
                       />
