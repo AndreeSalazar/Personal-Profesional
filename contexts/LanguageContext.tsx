@@ -185,6 +185,28 @@ const translations: Record<Language, Record<string, string>> = {
     'projects.graphicsEngine.results': 'El motor puede renderizar tanto mallas tradicionales como gráficos vectoriales matemáticos, permitiendo comparación directa entre ambos métodos. Los gráficos 2D se integran perfectamente en entornos 3D, y el sistema demuestra las diferencias prácticas entre ambos enfoques. Este proyecto me ayudó a entender profundamente cómo funcionan los motores gráficos modernos.',
     'projects.tech.multiplataforma': 'Multiplataforma',
     
+    // Coming Soon Projects
+    'projects.comingSoon.title': 'Próximamente',
+    'projects.comingSoon.subtitle': 'Proyectos en desarrollo activo',
+    'projects.comingSoon.asmNasmRust.title': 'ASM en NASM + Rust',
+    'projects.comingSoon.asmNasmRust.description': 'Proyecto en desarrollo que combina ASM (NASM) con Rust para arquitectura x64 bit. Mejoras y cambios nuevos para optimización de rendimiento y control de bajo nivel. Integración avanzada entre Assembly y Rust para sistemas de alto rendimiento.',
+    'projects.comingSoon.asmNasmRust.motivation': 'Quiero explorar la integración profunda entre Assembly y Rust para crear sistemas de máximo rendimiento. La combinación de ASM (NASM) para control total del hardware con la seguridad y expresividad de Rust permite crear soluciones que aprovechan lo mejor de ambos mundos. Este proyecto busca demostrar cómo se pueden combinar estas tecnologías para sistemas críticos de rendimiento.',
+    'projects.comingSoon.asmNasmRust.learned': 'En desarrollo: Aprendiendo sobre la integración de código Assembly inline en Rust, optimización de llamadas entre lenguajes, gestión de memoria compartida, y técnicas avanzadas de optimización para arquitectura x64. Explorando cómo Rust puede manejar código de bajo nivel de manera segura mientras mantiene el control total que ofrece Assembly.',
+    'projects.comingSoon.asmNasmRust.challenges': 'En desarrollo: Los desafíos principales incluyen la integración correcta entre ASM y Rust, manejo de memoria compartida, optimización de llamadas entre lenguajes, y asegurar que el código sea seguro y eficiente. La sincronización entre dos paradigmas de programación tan diferentes requiere un entendimiento profundo de ambos.',
+    'projects.comingSoon.asmNasmRust.results': 'En desarrollo: Este proyecto está en fase activa de desarrollo. El objetivo es crear un sistema que demuestre la integración exitosa entre ASM (NASM) y Rust, mostrando cómo se pueden combinar para lograr máximo rendimiento y control.',
+    'projects.comingSoon.vector4D.title': 'Vector 4D',
+    'projects.comingSoon.vector4D.description': 'Motor gráfico en desarrollo construido con Rust + EGUI + wgpu. Exploración de matemáticas vectoriales en 4 dimensiones para renderizado avanzado y visualizaciones complejas. Proyecto que extiende los conceptos de gráficos vectoriales a dimensiones superiores.',
+    'projects.comingSoon.vector4D.motivation': 'Me fascina la idea de extender los gráficos vectoriales a dimensiones superiores. Mientras que los gráficos 2D y 3D son comunes, explorar la cuarta dimensión abre posibilidades completamente nuevas para visualización de datos complejos, animaciones avanzadas y representaciones matemáticas abstractas. Este proyecto busca demostrar cómo se pueden renderizar y manipular vectores 4D de manera eficiente.',
+    'projects.comingSoon.vector4D.learned': 'En desarrollo: Aprendiendo matemáticas de 4 dimensiones, proyecciones de 4D a 3D y 2D, técnicas de renderizado para dimensiones superiores, y cómo implementar transformaciones y operaciones vectoriales en 4D. Explorando las aplicaciones prácticas de gráficos vectoriales multidimensionales.',
+    'projects.comingSoon.vector4D.challenges': 'En desarrollo: Los desafíos principales incluyen visualizar dimensiones que no podemos percibir directamente, implementar proyecciones matemáticas correctas, optimizar el renderizado de geometría 4D, y crear interfaces intuitivas para manipular objetos en 4 dimensiones. La abstracción matemática requiere un enfoque cuidadoso.',
+    'projects.comingSoon.vector4D.results': 'En desarrollo: Este proyecto está en fase activa de desarrollo. El objetivo es crear un motor gráfico funcional que pueda renderizar y manipular vectores en 4 dimensiones, demostrando las posibilidades de los gráficos vectoriales multidimensionales.',
+    'projects.comingSoon.meshVsVector3D.title': 'Mallas vs Vector 3D',
+    'projects.comingSoon.meshVsVector3D.description': 'Motor gráfico en desarrollo con Rust + EGUI + wgpu. Comparación avanzada entre renderizado basado en mallas (mesh) y renderizado vectorial 3D. Análisis profundo de rendimiento, calidad visual y casos de uso para cada técnica de renderizado.',
+    'projects.comingSoon.meshVsVector3D.motivation': 'Quiero crear una comparación exhaustiva entre dos técnicas fundamentales de renderizado 3D: mallas (mesh) tradicionales y renderizado vectorial puro. Cada técnica tiene sus ventajas: las mallas son eficientes para geometría compleja, mientras que los vectores ofrecen escalabilidad infinita. Este proyecto busca demostrar cuándo usar cada una y cómo optimizar ambas.',
+    'projects.comingSoon.meshVsVector3D.learned': 'En desarrollo: Aprendiendo sobre las diferencias fundamentales entre renderizado basado en mallas y vectorial, optimización de pipelines para ambos casos, técnicas de conversión entre formatos, y análisis de rendimiento comparativo. Explorando las ventajas y limitaciones de cada enfoque.',
+    'projects.comingSoon.meshVsVector3D.challenges': 'En desarrollo: Los desafíos principales incluyen implementar ambos sistemas de renderizado de manera eficiente, crear métricas comparativas justas, optimizar cada pipeline por separado, y desarrollar casos de prueba que demuestren las diferencias prácticas. La comparación requiere un entendimiento profundo de ambas técnicas.',
+    'projects.comingSoon.meshVsVector3D.results': 'En desarrollo: Este proyecto está en fase activa de desarrollo. El objetivo es crear un motor que pueda renderizar tanto mallas como gráficos vectoriales 3D, proporcionando una comparación directa y análisis detallado de cuándo usar cada técnica.',
+    
     // Search
     'search.placeholder': 'Buscar...',
     'search.pages': 'Buscar páginas...',
@@ -199,6 +221,8 @@ const translations: Record<Language, Record<string, string>> = {
     'search.profileDesc': 'Información personal, habilidades y tecnologías',
     'search.projectsTitle': 'Mis Proyectos',
     'search.projectsDesc': 'Proyectos destacados y logros en desarrollo',
+    'search.comingSoonTitle': 'Próximamente',
+    'search.comingSoonDesc': 'Proyectos en desarrollo activo',
     'search.categoryMain': 'Principal',
     'search.categoryProfile': 'Perfil',
     'search.categoryProjects': 'Proyectos',
@@ -207,6 +231,7 @@ const translations: Record<Language, Record<string, string>> = {
     'breadcrumbs.home': 'Inicio',
     'breadcrumbs.profile': 'Perfil',
     'breadcrumbs.projects': 'Proyectos',
+    'breadcrumbs.comingSoon': 'Próximamente',
     
     // Common
     'common.loading': 'Cargando...',
@@ -400,6 +425,28 @@ const translations: Record<Language, Record<string, string>> = {
     'projects.graphicsEngine.results': 'The engine can render both traditional meshes and mathematical vector graphics, allowing direct comparison between both methods. 2D graphics integrate perfectly into 3D environments, and the system demonstrates the practical differences between both approaches. This project helped me deeply understand how modern graphics engines work.',
     'projects.tech.multiplataforma': 'Multiplatform',
     
+    // Coming Soon Projects
+    'projects.comingSoon.title': 'Coming Soon',
+    'projects.comingSoon.subtitle': 'Projects in active development',
+    'projects.comingSoon.asmNasmRust.title': 'ASM in NASM + Rust',
+    'projects.comingSoon.asmNasmRust.description': 'Project in development combining ASM (NASM) with Rust for x64 bit architecture. New improvements and changes for performance optimization and low-level control. Advanced integration between Assembly and Rust for high-performance systems.',
+    'projects.comingSoon.asmNasmRust.motivation': 'I want to explore the deep integration between Assembly and Rust to create maximum performance systems. The combination of ASM (NASM) for total hardware control with Rust\'s safety and expressiveness allows creating solutions that leverage the best of both worlds. This project seeks to demonstrate how these technologies can be combined for critical performance systems.',
+    'projects.comingSoon.asmNasmRust.learned': 'In development: Learning about inline Assembly code integration in Rust, cross-language call optimization, shared memory management, and advanced optimization techniques for x64 architecture. Exploring how Rust can handle low-level code safely while maintaining the total control that Assembly offers.',
+    'projects.comingSoon.asmNasmRust.challenges': 'In development: The main challenges include correct integration between ASM and Rust, shared memory handling, cross-language call optimization, and ensuring the code is safe and efficient. Synchronizing between two such different programming paradigms requires deep understanding of both.',
+    'projects.comingSoon.asmNasmRust.results': 'In development: This project is in active development phase. The goal is to create a system that demonstrates successful integration between ASM (NASM) and Rust, showing how they can be combined to achieve maximum performance and control.',
+    'projects.comingSoon.vector4D.title': 'Vector 4D',
+    'projects.comingSoon.vector4D.description': 'Graphics engine in development built with Rust + EGUI + wgpu. Exploration of 4-dimensional vector mathematics for advanced rendering and complex visualizations. Project that extends vector graphics concepts to higher dimensions.',
+    'projects.comingSoon.vector4D.motivation': 'I\'m fascinated by the idea of extending vector graphics to higher dimensions. While 2D and 3D graphics are common, exploring the fourth dimension opens completely new possibilities for complex data visualization, advanced animations, and abstract mathematical representations. This project seeks to demonstrate how 4D vectors can be rendered and manipulated efficiently.',
+    'projects.comingSoon.vector4D.learned': 'In development: Learning 4-dimensional mathematics, 4D to 3D and 2D projections, rendering techniques for higher dimensions, and how to implement 4D transformations and vector operations. Exploring practical applications of multidimensional vector graphics.',
+    'projects.comingSoon.vector4D.challenges': 'In development: The main challenges include visualizing dimensions we cannot directly perceive, implementing correct mathematical projections, optimizing 4D geometry rendering, and creating intuitive interfaces to manipulate 4D objects. Mathematical abstraction requires a careful approach.',
+    'projects.comingSoon.vector4D.results': 'In development: This project is in active development phase. The goal is to create a functional graphics engine that can render and manipulate 4-dimensional vectors, demonstrating the possibilities of multidimensional vector graphics.',
+    'projects.comingSoon.meshVsVector3D.title': 'Mesh vs Vector 3D',
+    'projects.comingSoon.meshVsVector3D.description': 'Graphics engine in development with Rust + EGUI + wgpu. Advanced comparison between mesh-based rendering and 3D vector rendering. Deep analysis of performance, visual quality, and use cases for each rendering technique.',
+    'projects.comingSoon.meshVsVector3D.motivation': 'I want to create an exhaustive comparison between two fundamental 3D rendering techniques: traditional meshes and pure vector rendering. Each technique has its advantages: meshes are efficient for complex geometry, while vectors offer infinite scalability. This project seeks to demonstrate when to use each and how to optimize both.',
+    'projects.comingSoon.meshVsVector3D.learned': 'In development: Learning about fundamental differences between mesh-based and vector rendering, pipeline optimization for both cases, conversion techniques between formats, and comparative performance analysis. Exploring advantages and limitations of each approach.',
+    'projects.comingSoon.meshVsVector3D.challenges': 'In development: The main challenges include implementing both rendering systems efficiently, creating fair comparative metrics, optimizing each pipeline separately, and developing test cases that demonstrate practical differences. Comparison requires deep understanding of both techniques.',
+    'projects.comingSoon.meshVsVector3D.results': 'In development: This project is in active development phase. The goal is to create an engine that can render both meshes and 3D vector graphics, providing direct comparison and detailed analysis of when to use each technique.',
+    
     // Search
     'search.placeholder': 'Search...',
     'search.pages': 'Search pages...',
@@ -414,6 +461,8 @@ const translations: Record<Language, Record<string, string>> = {
     'search.profileDesc': 'Personal information, skills and technologies',
     'search.projectsTitle': 'My Projects',
     'search.projectsDesc': 'Featured projects and development achievements',
+    'search.comingSoonTitle': 'Coming Soon',
+    'search.comingSoonDesc': 'Projects in active development',
     'search.categoryMain': 'Main',
     'search.categoryProfile': 'Profile',
     'search.categoryProjects': 'Projects',
@@ -422,6 +471,7 @@ const translations: Record<Language, Record<string, string>> = {
     'breadcrumbs.home': 'Home',
     'breadcrumbs.profile': 'Profile',
     'breadcrumbs.projects': 'Projects',
+    'breadcrumbs.comingSoon': 'Coming Soon',
     
     // Common
     'common.loading': 'Loading...',

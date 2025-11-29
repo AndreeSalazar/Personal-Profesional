@@ -49,11 +49,29 @@ export default function ProjectsPage() {
   // Memoize achievements to avoid recalculation
   const achievements = useMemo(() => getAchievements(t), [t])
 
-  // Memoize all techs
-  const allTechs = useMemo(() => 
-    Array.from(new Set(achievements.flatMap((a) => a.tech))),
-    [achievements]
-  )
+  // Classify technologies by proficiency level
+  const techLevels = useMemo(() => {
+    const allTechs = Array.from(new Set(achievements.flatMap((a) => a.tech)))
+    
+    // Classification based on usage and proficiency
+    const highTechs = [
+      'C++', 'Vulkan API', 'TypeScript', 'Python', 'JavaScript', 
+      'Angular', 'HTML5', 'CSS3', 'Rust', 'ASM (NASM)', 'C'
+    ]
+    const mediumTechs = [
+      'GLSL', 'CMake', 'Qt', 'PyQt', 'RxJS', 'EGUI', 'wgpu', 'Vulkan'
+    ]
+    const lowTechs = [
+      'Vector Math', '2D/3D', t('projects.tech.multiplataforma'), 
+      'Node System', '64-bit'
+    ]
+    
+    return {
+      high: allTechs.filter(tech => highTechs.includes(tech)),
+      medium: allTechs.filter(tech => mediumTechs.includes(tech)),
+      low: allTechs.filter(tech => lowTechs.includes(tech) || !highTechs.includes(tech) && !mediumTechs.includes(tech))
+    }
+  }, [achievements, t])
 
   // Memoize filtered projects - Sort featured first
   const filteredProjects = useMemo(() => {
@@ -354,7 +372,8 @@ export default function ProjectsPage() {
             </motion.div>
 
             {/* Search and Filter */}
-            <div className="flex flex-col md:flex-row gap-3 md:gap-4 mb-4 md:mb-6">
+            <div className="mb-4 md:mb-6 space-y-4">
+              {/* Search Bar */}
               <div className="flex-1 relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
                 <input
@@ -365,32 +384,228 @@ export default function ProjectsPage() {
                   className="w-full pl-9 md:pl-10 pr-4 py-2 md:py-2.5 bg-dark-lighter border border-dark-lighter rounded-lg text-sm md:text-base text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 transition-colors"
                 />
               </div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <Filter size={16} className="text-gray-400 hidden sm:block" />
-                <button
-                  onClick={() => setFilterTech(null)}
-                  className={`px-2.5 md:px-3 py-1.5 rounded-lg text-xs md:text-sm transition-colors ${
-                    filterTech === null
-                      ? 'bg-primary text-white'
-                      : 'bg-dark-lighter text-gray-300 hover:bg-dark-lighter/80'
-                  }`}
-                >
-                  {t('projects.all')}
-                </button>
-                {allTechs.map((tech) => (
-                  <button
-                    key={tech}
-                    onClick={() => handleTechFilter(tech)}
-                    className={`px-2.5 md:px-3 py-1.5 rounded-lg text-xs md:text-sm transition-colors ${
-                      filterTech === tech
-                        ? 'bg-primary text-white'
-                        : 'bg-dark-lighter text-gray-300 hover:bg-dark-lighter/80'
-                    }`}
-                  >
-                    {tech}
-                  </button>
-                ))}
-              </div>
+              
+              {/* Triangular Filter Layout */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="bg-black/40 backdrop-blur-sm border border-white/10 rounded-2xl p-4 md:p-6 relative overflow-hidden brushed-metal"
+                style={{
+                  boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.4)',
+                }}
+              >
+                {/* Animated background pattern */}
+                <motion.div
+                  className="absolute inset-0 opacity-[0.02]"
+                  style={{
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                  }}
+                  animate={{
+                    x: [0, 60, 0],
+                    y: [0, 60, 0],
+                  }}
+                  transition={{
+                    duration: 20,
+                    repeat: Infinity,
+                    ease: 'linear',
+                  }}
+                />
+                
+                <div className="relative z-10">
+                  {/* Header */}
+                  <div className="flex items-center gap-3 mb-6">
+                    <Filter size={18} className="text-primary" />
+                    <h3 className="text-lg font-bold text-white">Filtros por Nivel</h3>
+                    <div className="flex-1 h-px bg-gradient-to-r from-primary/30 via-primary/10 to-transparent" />
+                  </div>
+                  
+                  {/* All Button */}
+                  <div className="flex justify-center mb-6">
+                    <motion.button
+                      onClick={() => setFilterTech(null)}
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                      className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all relative overflow-hidden ${
+                        filterTech === null
+                          ? 'bg-gradient-to-r from-primary to-primary-dark text-white shadow-lg shadow-primary/50'
+                          : 'bg-dark-lighter text-gray-300 hover:bg-dark-lighter/80 border border-white/10'
+                      }`}
+                    >
+                      {filterTech === null && (
+                        <motion.div
+                          className="absolute inset-0 bg-gradient-to-r from-primary/50 via-transparent to-primary/50"
+                          animate={{
+                            x: ['-100%', '100%'],
+                          }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: 'linear',
+                          }}
+                        />
+                      )}
+                      <span className="relative z-10">{t('projects.all')}</span>
+                    </motion.button>
+                  </div>
+                  
+                  {/* Triangular Layout */}
+                  <div className="flex flex-col items-center gap-4">
+                    {/* High Level - Top (Triangle Peak) */}
+                    {techLevels.high.length > 0 && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                        className="w-full"
+                      >
+                        <div className="flex items-center gap-2 mb-3">
+                          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent" />
+                          <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider px-3 py-1 bg-emerald-500/10 rounded-full border border-emerald-500/30">
+                            High
+                          </span>
+                          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent" />
+                        </div>
+                        <div className="flex flex-wrap justify-center gap-2">
+                          {techLevels.high.map((tech, idx) => (
+                            <motion.button
+                              key={tech}
+                              onClick={() => handleTechFilter(tech)}
+                              initial={{ opacity: 0, scale: 0, y: -10 }}
+                              animate={{ opacity: 1, scale: 1, y: 0 }}
+                              transition={{ delay: 0.4 + idx * 0.05, type: 'spring', stiffness: 300 }}
+                              whileHover={{ scale: 1.1, y: -3 }}
+                              whileTap={{ scale: 0.95 }}
+                              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all relative overflow-hidden group ${
+                                filterTech === tech
+                                  ? 'bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-lg shadow-emerald-500/50'
+                                  : 'bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/20'
+                              }`}
+                            >
+                              {filterTech === tech && (
+                                <motion.div
+                                  className="absolute inset-0 bg-gradient-to-r from-emerald-400/50 via-transparent to-emerald-400/50"
+                                  animate={{
+                                    x: ['-100%', '100%'],
+                                  }}
+                                  transition={{
+                                    duration: 1.5,
+                                    repeat: Infinity,
+                                    ease: 'linear',
+                                  }}
+                                />
+                              )}
+                              <span className="relative z-10">{tech}</span>
+                            </motion.button>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                    
+                    {/* Medium Level - Middle */}
+                    {techLevels.medium.length > 0 && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.5 }}
+                        className="w-full"
+                      >
+                        <div className="flex items-center gap-2 mb-3">
+                          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-amber-500/50 to-transparent" />
+                          <span className="text-xs font-bold text-amber-400 uppercase tracking-wider px-3 py-1 bg-amber-500/10 rounded-full border border-amber-500/30">
+                            Medium
+                          </span>
+                          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-amber-500/50 to-transparent" />
+                        </div>
+                        <div className="flex flex-wrap justify-center gap-2">
+                          {techLevels.medium.map((tech, idx) => (
+                            <motion.button
+                              key={tech}
+                              onClick={() => handleTechFilter(tech)}
+                              initial={{ opacity: 0, scale: 0 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{ delay: 0.6 + idx * 0.05, type: 'spring', stiffness: 300 }}
+                              whileHover={{ scale: 1.1, y: -2 }}
+                              whileTap={{ scale: 0.95 }}
+                              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all relative overflow-hidden group ${
+                                filterTech === tech
+                                  ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-lg shadow-amber-500/50'
+                                  : 'bg-amber-500/10 text-amber-300 border border-amber-500/30 hover:bg-amber-500/20'
+                              }`}
+                            >
+                              {filterTech === tech && (
+                                <motion.div
+                                  className="absolute inset-0 bg-gradient-to-r from-amber-400/50 via-transparent to-amber-400/50"
+                                  animate={{
+                                    x: ['-100%', '100%'],
+                                  }}
+                                  transition={{
+                                    duration: 1.5,
+                                    repeat: Infinity,
+                                    ease: 'linear',
+                                  }}
+                                />
+                              )}
+                              <span className="relative z-10">{tech}</span>
+                            </motion.button>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                    
+                    {/* Low Level - Bottom (Triangle Base) */}
+                    {techLevels.low.length > 0 && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.7 }}
+                        className="w-full"
+                      >
+                        <div className="flex items-center gap-2 mb-3">
+                          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
+                          <span className="text-xs font-bold text-blue-400 uppercase tracking-wider px-3 py-1 bg-blue-500/10 rounded-full border border-blue-500/30">
+                            Low
+                          </span>
+                          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
+                        </div>
+                        <div className="flex flex-wrap justify-center gap-2">
+                          {techLevels.low.map((tech, idx) => (
+                            <motion.button
+                              key={tech}
+                              onClick={() => handleTechFilter(tech)}
+                              initial={{ opacity: 0, scale: 0, y: 10 }}
+                              animate={{ opacity: 1, scale: 1, y: 0 }}
+                              transition={{ delay: 0.8 + idx * 0.05, type: 'spring', stiffness: 300 }}
+                              whileHover={{ scale: 1.1, y: -2 }}
+                              whileTap={{ scale: 0.95 }}
+                              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all relative overflow-hidden group ${
+                                filterTech === tech
+                                  ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/50'
+                                  : 'bg-blue-500/10 text-blue-300 border border-blue-500/30 hover:bg-blue-500/20'
+                              }`}
+                            >
+                              {filterTech === tech && (
+                                <motion.div
+                                  className="absolute inset-0 bg-gradient-to-r from-blue-400/50 via-transparent to-blue-400/50"
+                                  animate={{
+                                    x: ['-100%', '100%'],
+                                  }}
+                                  transition={{
+                                    duration: 1.5,
+                                    repeat: Infinity,
+                                    ease: 'linear',
+                                  }}
+                                />
+                              )}
+                              <span className="relative z-10">{tech}</span>
+                            </motion.button>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
             </div>
           </div>
 
@@ -958,6 +1173,7 @@ export default function ProjectsPage() {
             </motion.div>
           )}
         </motion.div>
+
       </div>
     </div>
   )

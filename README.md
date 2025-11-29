@@ -37,47 +37,45 @@ npm run build
 npm start
 ```
 
-## Despliegue en GitHub Pages
+## 🚀 Despliegue en GitHub Pages
 
-### Configuración Inicial
+### ⚡ Inicio Rápido
 
-1. **Crea un repositorio en GitHub** (si aún no lo tienes)
+1. **Habilita GitHub Pages**:
+   - Ve a tu repositorio → **Settings** → **Pages**
+   - En **Source**, selecciona **GitHub Actions**
 
-2. **Configura el basePath** (solo si tu repositorio NO es `username.github.io`):
-   - Edita `.github/workflows/deploy.yml`
-   - Descomenta y ajusta la línea `BASE_PATH: '/nombre-repositorio'`
-   - Edita `next.config.js` y ajusta el `basePath` si es necesario
-
-3. **Habilita GitHub Pages**:
-   - Ve a Settings → Pages en tu repositorio
-   - Source: selecciona "GitHub Actions"
-
-4. **Haz push a la rama main/master**:
+2. **Haz push a la rama main**:
    ```bash
    git add .
-   git commit -m "Initial commit"
+   git commit -m "Preparar para GitHub Pages"
    git push origin main
    ```
 
-5. **El workflow se ejecutará automáticamente** y desplegará tu sitio en `https://username.github.io` o `https://username.github.io/nombre-repositorio`
+3. **Espera el despliegue automático** (2-5 minutos)
+   - Ve a la pestaña **Actions** para ver el progreso
+   - Tu sitio estará en: `https://AndreeSalazar.github.io/Personal-Profesional`
 
-### Despliegue Manual
+### 📋 Configuración del BasePath
 
-Si prefieres desplegar manualmente:
+El workflow ya está configurado para el repositorio `Personal-Profesional`.
 
-```bash
-# Construir el sitio estático
-npm run export
+**Si tu repositorio es diferente**, edita `.github/workflows/deploy.yml`:
+- Cambia `NEXT_PUBLIC_BASE_PATH: '/Personal-Profesional'` por tu nombre de repositorio
+- O usa `''` si tu repositorio es `username.github.io`
 
-# El resultado estará en la carpeta /out
-# Puedes subir esta carpeta a GitHub Pages manualmente
-```
+### 📖 Guía Completa
 
-### Notas Importantes
+Para instrucciones detalladas, consulta [DEPLOY.md](./DEPLOY.md)
 
-- Si tu repositorio es `username.github.io`, el sitio estará en la raíz
-- Si tu repositorio tiene otro nombre, necesitarás configurar el `basePath`
-- Los cambios se desplegarán automáticamente al hacer push a la rama principal
+### ✅ Checklist Pre-Despliegue
+
+- [x] Build funciona: `npm run build`
+- [x] Configuración de export estático en `next.config.js`
+- [x] Workflow de GitHub Actions configurado
+- [x] BasePath configurado correctamente
+- [x] Todas las rutas dinámicas tienen `generateStaticParams`
+- [x] Imágenes configuradas como `unoptimized: true`
 
 ## Estructura del Proyecto
 
@@ -107,6 +105,8 @@ npm run export
 5. **Ver Salida**: La salida aparecerá en la terminal inferior
 
 ## Licencia
+
+Desarrollado por Eddi Andreé Salazar Matos
 
 GNU General Public License v3.0
 

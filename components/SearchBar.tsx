@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Search, Command, X, FileCode, User, FolderOpen, Home } from 'lucide-react'
+import { Search, Command, X, FileCode, User, FolderOpen, Home, Clock } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useLanguage } from '@/contexts/LanguageContext'
 
@@ -52,6 +52,14 @@ export default function SearchBar() {
       descriptionKey: 'search.projectsDesc',
       path: '/projects',
       icon: FolderOpen,
+      categoryKey: 'search.categoryProjects',
+    },
+    {
+      id: 'comingSoon',
+      titleKey: 'search.comingSoonTitle',
+      descriptionKey: 'search.comingSoonDesc',
+      path: '/coming-soon',
+      icon: Clock,
       categoryKey: 'search.categoryProjects',
     },
   ]

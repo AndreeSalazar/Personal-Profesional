@@ -7,7 +7,7 @@ import { useParams } from 'next/navigation'
 import React, { useMemo, useState } from 'react'
 import ContactBar from '@/components/ContactBar'
 import { useLanguage } from '@/contexts/LanguageContext'
-import { getAllAchievements } from '../projectsData'
+import { getAllAchievements, getComingSoonProjects } from '../projectsData'
 
 interface ExpandableSectionProps {
   title: string
@@ -98,9 +98,11 @@ function ProjectDetailClient() {
   })
 
   const achievements = useMemo(() => getAllAchievements(t), [t])
+  const comingSoonProjects = useMemo(() => getComingSoonProjects(t), [t])
+  const allProjects = useMemo(() => [...achievements, ...comingSoonProjects], [achievements, comingSoonProjects])
   const project = useMemo(() => 
-    achievements.find((p) => (p as any).slug === slug || p.id.toString() === slug),
-    [achievements, slug]
+    allProjects.find((p) => (p as any).slug === slug || p.id.toString() === slug),
+    [allProjects, slug]
   )
 
   const toggleSection = (section: string) => {
@@ -242,7 +244,7 @@ function ProjectDetailClient() {
                   {t(project.titleKey)}
                 </motion.span>
               </motion.h1>
-              {project.featured && (
+              {(project as any).featured && (
                 <motion.span
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -299,7 +301,7 @@ function ProjectDetailClient() {
           </motion.div>
 
           {/* Enhanced Highlights */}
-          {project.highlightKeys && (
+          {(project as any).highlightKeys && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -311,7 +313,7 @@ function ProjectDetailClient() {
                 <h3 className="text-2xl font-bold text-white">{t('projects.features')}</h3>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {project.highlightKeys.map((key, idx) => (
+                {(project as any).highlightKeys.map((key: string, idx: number) => (
                   <motion.div
                     key={key}
                     initial={{ opacity: 0, x: -30, scale: 0.9 }}
@@ -451,8 +453,8 @@ function ProjectDetailClient() {
                   className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100"
                   transition={{ duration: 0.3 }}
                 />
-                {project.isWeb ? <ExternalLink size={24} className="relative z-10" /> : <Github size={24} className="relative z-10" />}
-                <span className="relative z-10">{project.isWeb ? t('projects.viewApp') : t('projects.viewGitHub')}</span>
+                {(project as any).isWeb ? <ExternalLink size={24} className="relative z-10" /> : <Github size={24} className="relative z-10" />}
+                <span className="relative z-10">{(project as any).isWeb ? t('projects.viewApp') : t('projects.viewGitHub')}</span>
                 <ExternalLink size={18} className="relative z-10" />
               </motion.a>
             ) : (

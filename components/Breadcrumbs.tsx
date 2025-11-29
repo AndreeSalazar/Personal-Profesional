@@ -13,6 +13,7 @@ export default function Breadcrumbs() {
     { name: t('breadcrumbs.home'), path: '/', key: 'home' },
     { name: t('breadcrumbs.profile'), path: '/profile', key: 'profile' },
     { name: t('breadcrumbs.projects'), path: '/projects', key: 'projects' },
+    { name: t('breadcrumbs.comingSoon'), path: '/coming-soon', key: 'comingSoon' },
   ]
 
   const currentPath = paths.find((p) => p.path === pathname) || paths[0]
