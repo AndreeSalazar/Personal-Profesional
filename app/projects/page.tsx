@@ -2,123 +2,14 @@
 
 import { motion } from 'framer-motion'
 import { Github, ExternalLink, Star, Code2, Rocket, Award, ArrowLeft, Filter, Search } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useMemo, useCallback } from 'react'
+import Link from 'next/link'
 import ContactBar from '@/components/ContactBar'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { getAllAchievements } from './projectsData'
 
-const getAchievements = (t: (key: string) => string) => [
-  {
-    id: 1,
-    titleKey: 'projects.vulkan.title',
-    descriptionKey: 'projects.vulkan.description',
-    tech: ['C++', 'Vulkan API', 'GLSL', 'CMake'],
-    link: 'https://github.com/AndreeSalazar/Motor-de-Render-Minimalista',
-    icon: Rocket,
-    color: 'from-blue-500 to-cyan-500',
-    featured: true,
-  },
-  {
-    id: 2,
-    titleKey: 'projects.omegaWeb.title',
-    descriptionKey: 'projects.omegaWeb.description',
-    tech: ['Angular', 'TypeScript', 'RxJS', 'CSS3'],
-    link: 'https://andreesalazar.github.io/Omega-Visual-Web/',
-    icon: Code2,
-    color: 'from-purple-500 to-pink-500',
-    featured: true,
-    isWeb: true,
-  },
-  {
-    id: 3,
-    titleKey: 'projects.codermind.title',
-    descriptionKey: 'projects.codermind.description',
-    tech: ['Python', 'PyQt', 'Node System'],
-    link: 'https://github.com/AndreeSalazar/Omega-Visual-Semantic-Node-Based-Code-Editor',
-    icon: Code2,
-    color: 'from-orange-500 to-red-500',
-    isBase: true,
-    highlightKeys: [
-      'projects.codermind.highlight1',
-      'projects.codermind.highlight2',
-      'projects.codermind.highlight3',
-    ],
-  },
-  {
-    id: 4,
-    titleKey: 'projects.ultraOmega.title',
-    descriptionKey: 'projects.ultraOmega.description',
-    tech: ['Rust', 'EGUI', 'wgpu', t('projects.tech.multiplataforma')],
-    link: 'https://github.com/AndreeSalazar/Omega-Visual-Semantic-Node-Based-Code-Editor',
-    icon: Star,
-    color: 'from-amber-500 to-yellow-500',
-    featured: true,
-    highlightKeys: [
-      'projects.ultraOmega.highlight1',
-      'projects.ultraOmega.highlight2',
-      'projects.ultraOmega.highlight3',
-      'projects.ultraOmega.highlight4',
-      'projects.ultraOmega.highlight5',
-    ],
-  },
-  {
-    id: 5,
-    titleKey: 'projects.omegaDesktop.title',
-    descriptionKey: 'projects.omegaDesktop.description',
-    tech: ['Python', 'C++', 'Vulkan', 'Qt'],
-    link: 'https://github.com/AndreeSalazar/Omega-Visual-Semantic-Node-Based-Code-Editor',
-    icon: Code2,
-    color: 'from-gray-500 to-slate-500',
-    isLegacy: true,
-    highlightKeys: [
-      'projects.omegaDesktop.highlight1',
-      'projects.omegaDesktop.highlight2',
-      'projects.omegaDesktop.highlight3',
-    ],
-  },
-  {
-    id: 6,
-    titleKey: 'projects.portfolio.title',
-    descriptionKey: 'projects.portfolio.description',
-    tech: ['HTML5', 'CSS3', 'JavaScript'],
-    link: 'https://github.com/AndreeSalazar/Web-Portfolio-Personal-1',
-    icon: Award,
-    color: 'from-green-500 to-emerald-500',
-  },
-  {
-    id: 7,
-    titleKey: 'projects.fastOS.title',
-    descriptionKey: 'projects.fastOS.description',
-    tech: ['ASM (NASM)', 'C', 'Vulkan API', '64-bit'],
-    link: null, // No disponible en GitHub por razones de peso
-    demoImage: '/images/fastos-demo.png',
-    icon: Rocket,
-    color: 'from-indigo-500 to-purple-500',
-    featured: true,
-    highlightKeys: [
-      'projects.fastOS.highlight1',
-      'projects.fastOS.highlight2',
-      'projects.fastOS.highlight3',
-      'projects.fastOS.highlight4',
-    ],
-  },
-  {
-    id: 8,
-    titleKey: 'projects.graphicsEngine.title',
-    descriptionKey: 'projects.graphicsEngine.description',
-    tech: ['C++', 'Vulkan API', 'Vector Math', '2D/3D'],
-    link: null, // No disponible en GitHub por razones de peso
-    demoImage: '/images/graphics-engine-demo.png',
-    icon: Code2,
-    color: 'from-cyan-500 to-blue-500',
-    featured: true,
-    highlightKeys: [
-      'projects.graphicsEngine.highlight1',
-      'projects.graphicsEngine.highlight2',
-      'projects.graphicsEngine.highlight3',
-    ],
-  },
-]
+const getAchievements = getAllAchievements
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -148,29 +39,53 @@ const cardVariants = {
   },
 }
 
+// Optimized animation variants - moved outside component to avoid recreation
+
 export default function ProjectsPage() {
   const { t } = useLanguage()
   const [searchQuery, setSearchQuery] = useState('')
   const [filterTech, setFilterTech] = useState<string | null>(null)
 
-  const achievements = getAchievements(t)
+  // Memoize achievements to avoid recalculation
+  const achievements = useMemo(() => getAchievements(t), [t])
 
-  // Get all techs (already includes translated "Multiplataforma")
-  const allTechs = Array.from(new Set(achievements.flatMap((a) => a.tech)))
+  // Memoize all techs
+  const allTechs = useMemo(() => 
+    Array.from(new Set(achievements.flatMap((a) => a.tech))),
+    [achievements]
+  )
 
-  const filteredProjects = achievements.filter((project) => {
-    const title = t(project.titleKey)
-    const description = t(project.descriptionKey)
-    const matchesSearch =
-      title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      description.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesTech = !filterTech || project.tech.includes(filterTech)
-    return matchesSearch && matchesTech
-  })
+  // Memoize filtered projects - Sort featured first
+  const filteredProjects = useMemo(() => {
+    const filtered = achievements.filter((project) => {
+      const title = t(project.titleKey)
+      const description = t(project.descriptionKey)
+      const matchesSearch =
+        title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        description.toLowerCase().includes(searchQuery.toLowerCase())
+      const matchesTech = !filterTech || project.tech.includes(filterTech)
+      return matchesSearch && matchesTech
+    })
+    // Sort: featured projects first, then by id
+    return filtered.sort((a, b) => {
+      if (a.featured && !b.featured) return -1
+      if (!a.featured && b.featured) return 1
+      return a.id - b.id
+    })
+  }, [achievements, searchQuery, filterTech, t])
+
+  // Memoize callbacks
+  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value)
+  }, [])
+
+  const handleTechFilter = useCallback((tech: string | null) => {
+    setFilterTech((current) => current === tech ? null : tech)
+  }, [])
 
   return (
     <div className="min-h-screen w-full flex flex-col bg-black overflow-x-hidden metallic-overlay relative">
-      {/* Animated background effects */}
+      {/* Animated background effects - Optimized */}
       <motion.div
         className="absolute inset-0 pointer-events-none z-0"
         animate={{
@@ -186,10 +101,11 @@ export default function ProjectsPage() {
           repeat: Infinity,
           ease: 'easeInOut',
         }}
+        style={{ willChange: 'background' }}
       />
       
-      {/* Floating particles */}
-      {[...Array(10)].map((_, i) => (
+      {/* Floating particles - Reduced for performance */}
+      {[...Array(5)].map((_, i) => (
         <motion.div
           key={i}
           className="absolute w-2 h-2 bg-primary/20 rounded-full"
@@ -209,6 +125,7 @@ export default function ProjectsPage() {
             delay: i * 0.3,
             ease: 'easeInOut',
           }}
+          style={{ willChange: 'transform, opacity' }}
         />
       ))}
       
@@ -443,7 +360,7 @@ export default function ProjectsPage() {
                 <input
                   type="text"
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={handleSearchChange}
                   placeholder={t('projects.search')}
                   className="w-full pl-9 md:pl-10 pr-4 py-2 md:py-2.5 bg-dark-lighter border border-dark-lighter rounded-lg text-sm md:text-base text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 transition-colors"
                 />
@@ -463,7 +380,7 @@ export default function ProjectsPage() {
                 {allTechs.map((tech) => (
                   <button
                     key={tech}
-                    onClick={() => setFilterTech(filterTech === tech ? null : tech)}
+                    onClick={() => handleTechFilter(tech)}
                     className={`px-2.5 md:px-3 py-1.5 rounded-lg text-xs md:text-sm transition-colors ${
                       filterTech === tech
                         ? 'bg-primary text-white'
@@ -490,7 +407,7 @@ export default function ProjectsPage() {
                 initial={{ opacity: 0, y: 50, rotateX: -15 }}
                 animate={{ opacity: 1, y: 0, rotateX: 0 }}
                 transition={{ 
-                  delay: index * 0.15,
+                  delay: Math.min(index * 0.1, 0.5), // Cap delay for better performance
                   type: 'spring',
                   stiffness: 100,
                   damping: 15
@@ -505,10 +422,11 @@ export default function ProjectsPage() {
                     damping: 20
                   },
                 }}
-                className="group relative bg-black/60 backdrop-blur-sm rounded-xl p-4 md:p-6 border border-white/10 hover:border-primary/50 transition-all duration-500 overflow-hidden perspective-1000 brushed-metal"
+                className="group relative bg-gradient-to-br from-black/90 via-black/70 to-black/90 backdrop-blur-md rounded-2xl p-6 md:p-8 border-2 border-white/10 hover:border-primary/60 transition-all duration-500 overflow-hidden perspective-1000 brushed-metal shadow-2xl"
                 style={{
-                  boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.4)',
+                  boxShadow: 'inset 0 2px 4px rgba(255, 255, 255, 0.05), 0 12px 40px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 107, 53, 0.15), 0 0 30px rgba(255, 107, 53, 0.1)',
                   transformStyle: 'preserve-3d',
+                  willChange: 'transform',
                 }}
               >
                 {/* Animated Gradient Background */}
@@ -733,40 +651,42 @@ export default function ProjectsPage() {
 
                 {/* Content */}
                 <div className="relative z-10">
-                  <motion.h3 
-                    className="text-xl font-bold text-white mb-3 group-hover:text-primary transition-colors"
-                    initial={{ opacity: 0, x: -20, rotateX: -90 }}
-                    animate={{ opacity: 1, x: 0, rotateX: 0 }}
-                    transition={{ 
-                      delay: index * 0.1 + 0.3,
-                      type: 'spring',
-                      stiffness: 200,
-                      damping: 20
-                    }}
-                    whileHover={{ 
-                      x: 6,
-                      scale: 1.02,
-                      transition: { duration: 0.2 }
-                    }}
-                  >
-                    <motion.span
-                      className="inline-block"
-                      animate={{
-                        textShadow: [
-                          '0 0 0px rgba(255, 107, 53, 0)',
-                          '0 0 10px rgba(255, 107, 53, 0.5)',
-                          '0 0 0px rgba(255, 107, 53, 0)',
-                        ],
+                  <Link href={`/projects/${(achievement as any).slug || achievement.id}`}>
+                    <motion.h3 
+                      className="text-xl font-bold text-white mb-3 group-hover:text-primary transition-colors cursor-pointer hover:underline"
+                      initial={{ opacity: 0, x: -20, rotateX: -90 }}
+                      animate={{ opacity: 1, x: 0, rotateX: 0 }}
+                      transition={{ 
+                        delay: index * 0.1 + 0.3,
+                        type: 'spring',
+                        stiffness: 200,
+                        damping: 20
                       }}
-                      transition={{
-                        duration: 3,
-                        repeat: Infinity,
-                        ease: 'easeInOut',
+                      whileHover={{ 
+                        x: 6,
+                        scale: 1.02,
+                        transition: { duration: 0.2 }
                       }}
                     >
-                      {t(achievement.titleKey)}
-                    </motion.span>
-                  </motion.h3>
+                      <motion.span
+                        className="inline-block"
+                        animate={{
+                          textShadow: [
+                            '0 0 0px rgba(255, 107, 53, 0)',
+                            '0 0 10px rgba(255, 107, 53, 0.5)',
+                            '0 0 0px rgba(255, 107, 53, 0)',
+                          ],
+                        }}
+                        transition={{
+                          duration: 3,
+                          repeat: Infinity,
+                          ease: 'easeInOut',
+                        }}
+                      >
+                        {t(achievement.titleKey)}
+                      </motion.span>
+                    </motion.h3>
+                  </Link>
                   <motion.p 
                     className="text-gray-400 mb-4 text-sm leading-relaxed"
                     initial={{ opacity: 0, y: 10 }}
@@ -933,6 +853,9 @@ export default function ProjectsPage() {
                           src={(achievement as any).demoImage}
                           alt={t(achievement.titleKey)}
                           className="w-full h-auto object-cover"
+                          loading="lazy"
+                          decoding="async"
+                          style={{ willChange: 'transform' }}
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover/demo:opacity-100 transition-opacity duration-300" />
                         <div className="absolute bottom-2 left-2 right-2 opacity-0 group-hover/demo:opacity-100 transition-opacity duration-300">
